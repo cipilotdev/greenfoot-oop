@@ -1,16 +1,16 @@
 #BlueJ class context
 comment0.target=AnimatedSprites
-comment0.text=\n\ Write\ a\ description\ of\ class\ AnimatedSprites\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ AnimatedSprites\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
 comment1.params=
 comment1.target=void\ act()
-comment1.text=\n\ Act\ -\ do\ whatever\ the\ AnimatedSprites\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+comment1.text=\r\n\ Act\ -\ do\ whatever\ the\ AnimatedSprites\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
 comment2.params=
 comment2.target=AnimatedSprites()
-comment2.text=\n\ AnimatedCharacter\ Constructor\:\ Creates\ a\ new\ HashMap\ for\ all\ animations\ and\ a\ new\ array\ for\ the\ layers\ of\ the\ spritesheet\ and\ sets\ the\ first\ lastFrame.\n
+comment2.text=\r\n\ AnimatedCharacter\ Constructor\:\ Creates\ a\ new\ HashMap\ for\ all\ animations\ and\ a\ new\ array\ for\ the\ layers\ of\ the\ spritesheet\ and\ sets\ the\ first\ lastFrame.\r\n
 comment3.params=images
 comment3.target=void\ setCurrentImages(greenfoot.GreenfootImage[])
-comment3.text=\n\ Method\ 'setCurrentImages'\:\ Is\ called\ in\ the\ 'runTerminalAnimation'\ method,\ if\ a\ terminal\ animation\ should\ be\ played\ or\ in\ the\ act\ method,\n\ if\ the\ terminal\ animation\ is\ finished\ and\ the\ current\ animation\ will\ set\ to\ the\ primary\ animation\ again.\n\ It\ updates\ the\ currentImages\ array.\ This\ is\ one\ dimension\ of\ an\ Animation,\ and\ will\ be\ cycled\ through\ in\ the\ animation\ code.\n\ \n\ @param\ 'images'\:\ The\ array\ of\ GreenfootImages\ to\ which\ the\ current\ animation\ should\ be\ set\ to\n
+comment3.text=\r\n\ Method\ 'setCurrentImages'\:\ Is\ called\ in\ the\ 'runTerminalAnimation'\ method,\ if\ a\ terminal\ animation\ should\ be\ played\ or\ in\ the\ act\ method,\r\n\ if\ the\ terminal\ animation\ is\ finished\ and\ the\ current\ animation\ will\ set\ to\ the\ primary\ animation\ again.\r\n\ It\ updates\ the\ currentImages\ array.\ This\ is\ one\ dimension\ of\ an\ Animation,\ and\ will\ be\ cycled\ through\ in\ the\ animation\ code.\r\n\ \r\n\ @param\ 'images'\:\ The\ array\ of\ GreenfootImages\ to\ which\ the\ current\ animation\ should\ be\ set\ to\r\n
 comment4.params=
 comment4.target=void\ positionCollider()
-comment4.text=\n\ Method\ 'positionCollider'\:\ Is\ called\ in\ the\ 'addedToWorld'\ method\ and\ in\ the\ 'act'\ method\ every\ tick.\n\ It\ spawns\ a\ new\ Collider\ at\ the\ start\ or\ when\ the\ player\ changes\ the\ map.\n\ The\ Collider\ will\ be\ teleportet\ to\ the\ location\ of\ the\ player\ every\ tick.\n
+comment4.text=\r\n\ Method\ 'positionCollider'\:\ Is\ called\ in\ the\ 'addedToWorld'\ method\ and\ in\ the\ 'act'\ method\ every\ tick.\r\n\ It\ spawns\ a\ new\ Collider\ at\ the\ start\ or\ when\ the\ player\ changes\ the\ map.\r\n\ The\ Collider\ will\ be\ teleportet\ to\ the\ location\ of\ the\ player\ every\ tick.\r\n
 numComments=5

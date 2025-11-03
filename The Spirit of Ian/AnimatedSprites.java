@@ -100,28 +100,28 @@ public class AnimatedSprites extends Actor
 
     protected Collider myCollider;                   //Reference to my collider
 
-    //----- Private variables -----
-    private double framesPerSecond;                  //Animation speed
-    private double secondsPerFrame;                  //Calculated fraction of second per frame
-    private double maxFrameLength = 0.10;            //Used to avoid "jumping" animations if lag
+    //----- Protected variables (accessible by subclasses) -----
+    protected double framesPerSecond;                  //Animation speed
+    protected double secondsPerFrame;                  //Calculated fraction of second per frame
+    protected double maxFrameLength = 0.10;            //Used to avoid "jumping" animations if lag
 
-    private int frame = 0;                           //Current frame counter
-    private double xx, yy;                           //Internal, double representation of coordinates
-    private int dirX = 0;                            //Variable used to control direction
-    private int dirY = 0;                            //Variable used to control direction
-    private int prevX, prevY;                        //Previous rounded X and Y values
-    private boolean idle = false;                    //Used to specify idle frame
-    private boolean stopAtEnd = false;               //Is this a TERMINAL animation?
+    protected int frame = 0;                           //Current frame counter
+    protected double xx, yy;                           //Internal, double representation of coordinates
+    protected int dirX = 0;                            //Variable used to control direction
+    protected int dirY = 0;                            //Variable used to control direction
+    protected int prevX, prevY;                        //Previous rounded X and Y values
+    protected boolean idle = false;                    //Used to specify idle frame
+    protected boolean stopAtEnd = false;               //Is this a TERMINAL animation?
 
-    private double moveSpeed;                        //How many pixels per SECOND
+    protected double moveSpeed;                        //How many pixels per SECOND
 
-    private static final int maxLayers = 3;          //How many layers can be rendered together to one spriteSheet
+    protected static final int maxLayers = 3;          //How many layers can be rendered together to one spriteSheet
 
-    private GreenfootImage[] currentImages;          //Current set of images. This is one dimension of an Animation, and will be cycled through in the animation code.
-    private GreenfootImage[] spriteSheetLayers;      //Array that contains the layers of the spriteSheet
-    private GreenfootImage spriteSheet;              //The final spriteSheet of the character (with all layers that are currenty visible)
+    protected GreenfootImage[] currentImages;          //Current set of images. This is one dimension of an Animation, and will be cycled through in the animation code.
+    protected GreenfootImage[] spriteSheetLayers;      //Array that contains the layers of the spriteSheet
+    protected GreenfootImage spriteSheet;              //The final spriteSheet of the character (with all layers that are currenty visible)
 
-    private boolean collisionEnabled = false; 
+    protected boolean collisionEnabled = false; 
 
     //Keep animation going at consistent speed
     private long lastFrame;                          //Update of the last animation
@@ -148,7 +148,7 @@ public class AnimatedSprites extends Actor
      * 
      * @param 'images': The array of GreenfootImages to which the current animation should be set to
      */
-    private void setCurrentImages(GreenfootImage[] images)
+    protected void setCurrentImages(GreenfootImage[] images)
     {
         currentImages = new GreenfootImage[images.length];
         for(int i = 0; i < images.length; i++)
