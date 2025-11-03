@@ -1,0 +1,26 @@
+#BlueJ class context
+comment0.target=DialogBox
+comment0.text=\n\ Write\ a\ description\ of\ class\ Dialog\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=text
+comment1.target=DialogBox(DialogText)
+comment2.params=
+comment2.target=void\ act()
+comment2.text=\n\ Act\ -\ do\ whatever\ the\ Dialog\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+comment3.params=
+comment3.target=void\ fade()
+comment4.params=
+comment4.target=void\ fadeIn()
+comment4.text=\n\ Method\ 'fadeIn'\:\ Is\ called\ in\ the\ Tutorial\ class.\n\ The\ window\ will\ start\ fading\ in.\n
+comment5.params=
+comment5.target=void\ fadeOutIn()
+comment5.text=\n\ Method\ 'fadeOutIn'\:\ Is\ called\ in\ the\ Tutorial\ class.\n\ The\ window\ will\ start\ fading\ out\ and\ in\ again.\n
+comment6.params=
+comment6.target=void\ fadeOut()
+comment6.text=\n\ Method\ 'fadeOut'\:\ Is\ called\ in\ the\ Tutorial\ class.\n\ The\ window\ will\ start\ fading\ out.\n
+comment7.params=
+comment7.target=void\ fadeOutCalledInTutorialText()
+comment7.text=\n\ Method\ 'fadeOutCalledInTutorialText'\:\ Is\ called\ in\ the\ Tutorial\ Text\ class.\n\ The\ window\ will\ start\ fading\ out\ and\ in\ again.\n
+comment8.params=text
+comment8.target=void\ updateText(java.lang.String)
+comment8.text=\n\ Method\ 'updateText'\:\ Is\ called\ in\ the\ Tutorial\ class.\n\ It\ updates\ the\ name\ of\ the\ text\ that\ should\ be\ displayed\ next.\n\ \n\ @param\ 'text'\:\ The\ name\ of\ the\ text\ that\ should\ be\ displayed\ next.\n
+numComments=9

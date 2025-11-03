@@ -26,7 +26,11 @@ public class CityClass extends World
      */
     private void prepare()
     {
-        Teacher teacher = new Teacher();
-        addObject(teacher,841,141);
+        DialogText text = new DialogText();
+        DialogBox window = new DialogBox(text);
+        
+        addObject(window, 625, 280);
+        addObject(text, 625, 450);
+        addObject(new Dialog(window, true), 0, 0);
     }
 }

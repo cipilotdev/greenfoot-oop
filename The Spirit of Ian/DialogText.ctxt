@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=DialogText
+comment0.text=\n\ Write\ a\ description\ of\ class\ DialogText\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=
+comment1.target=DialogText()
+comment1.text=\n\ TutorialText\ Constructor\:\ Sets\ the\ image\ to\ null.\n
+comment2.params=
+comment2.target=void\ act()
+comment2.text=\n\ Method\ 'act'\:\ Is\ called\ every\ tick\ or\ whenever\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n\ It\ calls\ the\ 'fade'\ method.\n
+comment3.params=
+comment3.target=void\ fade()
+comment3.text=\n\ Method\ 'fade'\:\ Is\ called\ every\ tick\ by\ the\ 'act'\ method.\n\ If\ the\ fade\ boolean\ is\ set\ to\ true\ the\ text\ will\ fade\ in\ or\ out\ (corresponding\ to\ the\ speed\ variable\ set\ in\ the\ 'fadeIn'\ /\ 'fadeOut'\ method).\n
+comment4.params=
+comment4.target=void\ fadeIn()
+comment4.text=\n\ Method\ 'fadeIn'\:\ Is\ called\ in\ the\ TutorialWindow\ class.\n\ The\ text\ will\ start\ fading\ in.\n
+comment5.params=
+comment5.target=void\ fadeOut()
+comment5.text=\n\ Method\ 'fadeOut'\:\ Is\ called\ in\ the\ TutorialWindow\ class.\n\ The\ text\ will\ start\ fading\ out.\n
+comment6.params=text
+comment6.target=void\ updateText(java.lang.String)
+comment6.text=\n\ Method\ 'updateText'\:\ Is\ called\ in\ the\ TutorialWindow\ class.\n\ The\ correct\ image\ will\ be\ set.\n
+numComments=7
