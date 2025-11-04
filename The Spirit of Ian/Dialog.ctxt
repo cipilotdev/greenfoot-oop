@@ -1,12 +1,12 @@
 #BlueJ class context
 comment0.target=Dialog
-comment0.text=\n\ Write\ a\ description\ of\ class\ Dialog\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ Dialog\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
 comment1.params=window\ showDialog
 comment1.target=Dialog(DialogBox,\ boolean)
-comment1.text=\n\ Tutorial\ Constructor\:\ Sets\ the\ image\ to\ null\ and\ sets\ the\ reference\ to\ the\ window.\n\ \n\ @param\ 'newWindow'\:\ Reference\ to\ the\ tutorial\ window\n\ @param\ 'showTutorial'\:\ Only\ true\ in\ the\ first\ world\ to\ show\ the\ tutorial\ only\ once.\n
+comment1.text=\r\n\ Tutorial\ Constructor\:\ Sets\ the\ image\ to\ null\ and\ sets\ the\ reference\ to\ the\ window.\r\n\ \r\n\ @param\ 'newWindow'\:\ Reference\ to\ the\ tutorial\ window\r\n\ @param\ 'showTutorial'\:\ Only\ true\ in\ the\ first\ world\ to\ show\ the\ tutorial\ only\ once.\r\n
 comment2.params=
 comment2.target=void\ act()
-comment2.text=\n\ Act\ -\ do\ whatever\ the\ Dialog\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+comment2.text=\r\n\ Act\ -\ do\ whatever\ the\ Dialog\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
 comment3.params=
 comment3.target=void\ update()
 numComments=4
