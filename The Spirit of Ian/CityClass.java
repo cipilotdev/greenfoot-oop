@@ -8,7 +8,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class CityClass extends World
 {
-
+    //----- World Background -----
+    private static final GreenfootImage cityClassMap = new GreenfootImage("worlds/cityClass.png");
+    
     /**
      * Constructor for objects of class cityClass.
      * 
@@ -16,7 +18,8 @@ public class CityClass extends World
     public CityClass()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(1248, 576, 1); 
+        super(1248, 576, 1);
+        setBackground(cityClassMap);
         prepare();
     }
     
@@ -26,11 +29,22 @@ public class CityClass extends World
      */
     private void prepare()
     {
-        DialogText text = new DialogText();
+        /*DialogText text = new DialogText();
         DialogBox window = new DialogBox(text);
-        
         addObject(window, 625, 280);
         addObject(text, 625, 450);
-        addObject(new Dialog(window, true), 0, 0);
+        addObject(new Dialog(window, true), 0, 0);*/
+
+        Teacher teacher = new Teacher();
+        addObject(teacher, 900, 167);
+
+        Collider collider = new Collider(10, 10, 10, 10);
+        addObject(collider, 803, 168);
+
+        Student student = new Student();
+        addObject(student, 720, 228);
+
+        Student student2 = new Student();
+        addObject(student2, 849, 228);
     }
 }

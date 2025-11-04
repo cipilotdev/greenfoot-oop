@@ -1,7 +1,16 @@
 #BlueJ class context
 comment0.target=Student
-comment0.text=\n\ Write\ a\ description\ of\ class\ Student\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
 comment1.params=
-comment1.target=void\ act()
-comment1.text=\n\ Act\ -\ do\ whatever\ the\ Student\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
-numComments=2
+comment1.target=Student()
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=void\ move()
+comment3.text=\n\ Method\ 'move'\:\ Is\ called\ every\ tick\ by\ the\ 'act'\ method.\n\ It\ sets\ the\ move\ variables\ if\ 'w',\ 's',\ 'd'\ or\ 'a'\ is\ pressed.\n\ If\ an\ item\ was\ used,\ it\ checks\ if\ the\ use\ cooldown\ of\ that\ item\ has\ expired,\ because\ the\ character\ is\ not\ able\ to\ move\ while\ using\ an\ item\ /\ attacking.\n
+comment4.params=
+comment4.target=void\ checkCollision()
+comment4.text=\n\ Method\ 'checkCollision'\:\ Is\ called\ every\ tick\ by\ the\ 'act'\ method.\n\ If\ the\ collder\ of\ the\ player\ intersects\ another\ collider\ or\ an\ object,\ teleports\ the\ player\ back\ to\ his\ position\ of\ the\ last\ tick.\n
+comment5.params=
+comment5.target=void\ storePosition()
+comment5.text=\n\ Method\ 'storePosition'\:\ Is\ called\ every\ tick\ by\ the\ 'act'\ method.\n\ It\ stores\ the\ current\ position\ of\ the\ player,\ so\ that\ information\ can\ be\ used\ next\ tick\ in\ the\ 'checkCollision'\ method,\ if\ the\ player\ collides\ with\ something.\n
+numComments=6
