@@ -194,7 +194,7 @@ public class Teacher extends AnimatedSprites {
         else if (this.getWorld().getClass() == Home.class) {
             if (getX() > 1240 && getY() > 270 && getY() < 370) {
                 Greenfoot.setWorld(new MazePath());
-            }
+                }
         }
     }
 }
