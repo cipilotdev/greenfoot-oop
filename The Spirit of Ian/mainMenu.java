@@ -35,23 +35,12 @@ public class mainMenu extends World
         addObject(text, 625, 450);
         addObject(new Dialog(window, true), 0, 0);*/
         Exit exit = new Exit();
-        addObject(exit,375,421);
+        addObject(exit,346,457);
+
         Settings settings = new Settings();
-        addObject(settings,818,362);
+        addObject(settings,252,323);
+
         Start start = new Start();
-        addObject(start,662,481);
-        settings.setLocation(887,402);
-        exit.setLocation(287,415);
-        start.setLocation(681,464);
-        settings.setLocation(1028,452);
-        start.setLocation(692,507);
-        start.setLocation(673,474);
-        settings.setLocation(1159,41);
-        exit.setLocation(377,477);
-        exit.setLocation(350,467);
-        exit.setLocation(352,455);
-        exit.setLocation(340,463);
-        exit.setLocation(363,441);
-        exit.setLocation(346,457);
+        addObject(start,673,474);
     }
 }
