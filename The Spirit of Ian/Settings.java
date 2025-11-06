@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Settings extends button
+public class Settings extends Button
 {
     /**
      * Act - do whatever the Settings wants to do. This method is called whenever
