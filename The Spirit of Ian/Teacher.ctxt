@@ -16,7 +16,6 @@ comment4.params=
 comment4.target=void\ act()
 comment5.params=
 comment5.target=void\ handleInput()
-comment5.text=public\ void\ move()\n\ \ \ \ {\n\ \ \ \ \ \ \ \ //Each\ tick,\ movement\ is\ reset\n\ \ \ \ \ \ \ \ moveX\ \=\ 0;\ \n\ \ \ \ \ \ \ \ moveY\ \=\ 0;\n\ \ \ \ \ \ \ \ if(Greenfoot.isKeyDown("w"))\ {\n\ \ \ \ \ \ \ \ \ \ \ \ moveY\ \=\ -1;\n\ \ \ \ \ \ \ \ }\ else\ if(Greenfoot.isKeyDown("s"))\ {\n\ \ \ \ \ \ \ \ \ \ \ \ moveY\ \=\ 1;\n\ \ \ \ \ \ \ \ }\ else\ if(Greenfoot.isKeyDown("d"))\ {\n\ \ \ \ \ \ \ \ \ \ \ \ moveX\ \=\ 1;\n\ \ \ \ \ \ \ \ }\ else\ if(Greenfoot.isKeyDown("a"))\ {\n\ \ \ \ \ \ \ \ \ \ \ \ moveX\ \=\ -1;\n\ \ \ \ \ \ \ \ }\n\n\ \ \ \ \ \ \ \ if\ (moveX\ \!\=\ 0\ ||\ moveY\ \!\=\ 0)\ {\n\ \ \ \ \ \ \ \ \ \ \ \ //Set\ directions\ for\ attacking.\ -1,\ 0\ or\ 1\ for\ each\ axis\ to\ represent\ which\ direction\ the\ player\ is\ facing\n\ \ \ \ \ \ \ \ \ \ \ \ xOffset\ \=\ moveX;\n\ \ \ \ \ \ \ \ \ \ \ \ yOffset\ \=\ moveY;\n\ \ \ \ \ \ \ \ \ \ \ \ moveInDirection(moveX,\ moveY);\n\ \ \ \ \ \ \ \ }\ else\ {\n\ \ \ \ \ \ \ \ \ \ \ \ stopMoving();\n\ \ \ \ \ \ \ \ }\n}
 comment6.params=
 comment6.target=void\ animate()
 comment7.params=

@@ -38,9 +38,18 @@ public class CityClass extends World
         Teacher teacher = new Teacher();
         addObject(teacher, 900, 167);
 
-        Collider collider = new Collider(10, 10, 10, 10);
-        addObject(collider, 803, 168);
+        Collider collider = new Collider(1248, 70, 1, 1);
+        addObject(collider, 624, 35);
 
+        Collider collider2 = new Collider(130, 60, 0, 0);
+        addObject(collider2, 845, 80);
+        
+        Collider collider3 = new Collider(130, 60, 0, 0);
+        addObject(collider3, 335, 80);
+        
+        Collider collider4 = new Collider(60, 70, 0, 0);
+        addObject(collider4, 600, 100);
+        
         Student student = new Student();
         addObject(student, 720, 228);
 
