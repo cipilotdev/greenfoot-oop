@@ -29,7 +29,7 @@ public class Teacher extends AnimatedSprites {
         loadAnimations();
         setImage(getCurrentFrame());
         
-        setCollider(28, 55, 0, 4);
+        setCollider(28, 38, 0, 0);
     }
 
     private void loadAnimations() {
@@ -91,6 +91,8 @@ public class Teacher extends AnimatedSprites {
         checkCollision();
         
         storePosition();
+        
+        checkChangeMap();
         
         super.teacherAct();
     }
@@ -185,29 +187,14 @@ public class Teacher extends AnimatedSprites {
      */
     public void checkChangeMap() {
         if (this.getWorld().getClass() == CityClass.class) {
-            if (getX() > 1690) {
-                Greenfoot.setWorld(null);
+            if (getX() > 1045 && getY() < 100 && getX() < 1110) {
+                Greenfoot.setWorld(new Home());
             }
         }
-        /*else if(this.getWorld().getClass() == WorldMap2.class)
-        {
-            if(getY() > 875 && getX() > 800 && getX() < 1000)
-            {
-                if(this.getWorld().getObjects(Enemy.class).isEmpty())
-                {
-                    Greenfoot.setWorld(new WorldMap3(this, bar, hitBar, inventory, inventory.getInventoryUI(), hotbar, hotbar.getHotbarUI(), hotbar.getHighlight()));
-                }
-                else
-                {
-                    double t = System.nanoTime();
-                    if(t - lastTextTime >= textCooldown)
-                    {
-                        lastTextTime = System.nanoTime();
-
-                        this.getWorld().getObjects(Tutorial.class).get(0).killAllEnemysText();
-                    }
-                }
+        else if (this.getWorld().getClass() == Home.class) {
+            if (getX() > 1240 && getY() > 270 && getY() < 370) {
+                Greenfoot.setWorld(new MazePath());
             }
-        }*/
+        }
     }
 }
