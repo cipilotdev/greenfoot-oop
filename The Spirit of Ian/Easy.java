@@ -17,5 +17,8 @@ public class Easy extends Difficulty
     public void act()
     {
         // Add your action code here.
+        if (Greenfoot.mouseClicked(this)) {
+            Greenfoot.setWorld(new CityClass());
+        }
     }
 }
