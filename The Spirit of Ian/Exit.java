@@ -8,6 +8,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Exit extends Button
 {
+    private static final GreenfootImage exitImage = new GreenfootImage("ui/button/exit.png");
+    
+    public Exit()
+    {    
+        setImage(exitImage);
+    }
+    
     /**
      * Act - do whatever the exit wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.

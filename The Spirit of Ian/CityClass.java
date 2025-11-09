@@ -6,19 +6,22 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class CityClass extends World
+public class CityClass extends Tutorial
 {
     //----- World Background -----
     private static final GreenfootImage cityClassMap = new GreenfootImage("worlds/cityClass.png");
+    
+    private int difficulty;
     
     /**
      * Constructor for objects of class cityClass.
      * 
      */
-    public CityClass()
-    {    
+    public CityClass(int difficulty)
+    {
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(1248, 576, 1);
+        super(1248, 576);
+        this.difficulty = difficulty;
         setBackground(cityClassMap);
         prepare();
     }
@@ -34,7 +37,7 @@ public class CityClass extends World
         addObject(window, 625, 280);
         addObject(text, 625, 450);
         addObject(new Dialog(window, true), 0, 0);*/
-
+        
         Teacher teacher = new Teacher();
         addObject(teacher, 900, 167);
 
@@ -55,5 +58,12 @@ public class CityClass extends World
 
         Student student2 = new Student();
         addObject(student2, 849, 228);
+        
+        Board board = new Board();
+        addObject(board, 624, 288);
+    }
+    
+    public int getDifficulty() {
+        return difficulty;
     }
 }

@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=Question
+comment0.text=\n\ Write\ a\ description\ of\ class\ GenerateQ\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=difficulty
+comment1.target=Question(int)
+comment2.params=value
+comment2.target=void\ handleInput(java.lang.String)
+comment3.params=diff
+comment3.target=java.lang.String\ generateQuestion(int)
+comment4.params=
+comment4.target=void\ checkAnswer()
+comment5.params=
+comment5.target=void\ updateImage()
+comment6.params=
+comment6.target=void\ act()
+numComments=7

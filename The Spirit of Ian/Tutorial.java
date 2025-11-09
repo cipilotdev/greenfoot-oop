@@ -1,23 +1,20 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class PapanTulis here.
+ * Write a description of class Tutorial here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class PapanTulis extends World
+public class Tutorial extends World
 {
-
     /**
-     * Constructor for objects of class PapanTulis.
+     * Constructor for objects of class Tutorial.
      * 
      */
-    
-    private static final GreenfootImage mainMenu = new GreenfootImage("worlds/");
-    public PapanTulis()
+    public Tutorial(int x, int y)
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
-        super(600, 400, 1); 
+        super(x, y, 1);
     }
 }

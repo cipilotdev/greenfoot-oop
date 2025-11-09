@@ -20,6 +20,8 @@ public class Teacher extends AnimatedSprites {
     private static final int animationSpeed = 20;
     private static final int walkSpeed = 60;
     
+    private int difficulty;
+    
     public Teacher() {
         changeSpeed(walkSpeed, animationSpeed);
         setLayer(0, teacher);
@@ -29,7 +31,7 @@ public class Teacher extends AnimatedSprites {
         loadAnimations();
         setImage(getCurrentFrame());
         
-        setCollider(28, 38, 0, 0);
+        setCollider(20, 28, 0, 7);
     }
 
     private void loadAnimations() {
@@ -106,23 +108,26 @@ public class Teacher extends AnimatedSprites {
             currentState = "walking";
             moving = true;
             moveY = -1;
-        } else if(Greenfoot.isKeyDown("s")) {
+        }
+        if(Greenfoot.isKeyDown("s")) {
             currentDirection = "south";
             currentState = "walking";
             moveY = 1;
             moving = true;
-        } else if(Greenfoot.isKeyDown("d")) {
+        }
+        if(Greenfoot.isKeyDown("d")) {
             currentDirection = "east";
             currentState = "walking";
             moveX = 1;
             moving = true;
-        } else if(Greenfoot.isKeyDown("a")) {
+        }
+        if(Greenfoot.isKeyDown("a")) {
             currentDirection = "west";
             currentState = "walking";
             moveX = -1;
             moving = true;
         }
-
+        
         if (moveX != 0 || moveY != 0) {
             //Set directions for attacking. -1, 0 or 1 for each axis to represent which direction the player is facing
             xOffset = moveX;
@@ -187,14 +192,30 @@ public class Teacher extends AnimatedSprites {
      */
     public void checkChangeMap() {
         if (this.getWorld().getClass() == CityClass.class) {
+            difficulty = ((CityClass)getWorld()).getDifficulty();
+        } else {
+            difficulty = ((Game)getWorld()).getDifficulty();
+        }
+
+        if (this.getWorld().getClass() == CityClass.class) {
             if (getX() > 1045 && getY() < 100 && getX() < 1110) {
-                Greenfoot.setWorld(new Home());
+                Greenfoot.setWorld(new Home(difficulty));
             }
         }
-        else if (this.getWorld().getClass() == Home.class) {
+        if (this.getWorld().getClass() == Home.class) {
             if (getX() > 1240 && getY() > 270 && getY() < 370) {
-                Greenfoot.setWorld(new MazePath());
-                }
+                Greenfoot.setWorld(new MazePath(difficulty));
+            }
+        }
+        if (this.getWorld().getClass() == MazePath.class) {
+            if (getX() > 1232) {
+                Greenfoot.setWorld(new School(difficulty));
+            }
+        }
+        if (this.getWorld().getClass() == School.class) {
+            if (getX() > 929 && getY() > 290 && getX() < 950 && getY() < 300) {
+                Greenfoot.setWorld(new VillageClass(difficulty));
+            }
         }
     }
 }

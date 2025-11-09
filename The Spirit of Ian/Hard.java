@@ -8,16 +8,22 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Hard extends Difficulty
 {
+    private static final GreenfootImage hardImage = new GreenfootImage("ui/button/difficulty/hard.png");
+    
+    public Hard() {
+        setImage(hardImage);
+    }
+    
     /**
      * Act - do whatever the Hard wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    private static final GreenfootImage hard = new GreenfootImage("ui/button/difficulty/hard_btn.png");
     public void act()
     {
         // Add your action code here.
         if (Greenfoot.mouseClicked(this)) {
-            Greenfoot.setWorld(new CityClass());
+            new Game(3);
+            Greenfoot.setWorld(new CityClass(3));
         }
     }
 }

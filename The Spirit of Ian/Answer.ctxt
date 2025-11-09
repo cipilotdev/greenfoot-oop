@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=Answer
+comment0.text=\n\ Write\ a\ description\ of\ class\ GenerateA\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=difficulty
+comment1.target=Answer(int)
+comment2.params=
+comment2.target=java.lang.String\ generateExpression()
+comment3.params=teacherSaysCorrect
+comment3.target=boolean\ checkAnswer(boolean)
+comment4.params=
+comment4.target=java.lang.String\ getQuestion()
+comment5.params=
+comment5.target=int\ getResult()
+comment6.params=
+comment6.target=java.lang.String\ getOp()
+comment7.params=
+comment7.target=void\ act()
+numComments=8

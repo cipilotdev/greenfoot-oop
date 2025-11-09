@@ -8,17 +8,22 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Medium extends Difficulty
 {
+    private static final GreenfootImage mediumImage = new GreenfootImage("ui/button/difficulty/medium.png");
+    
+    public Medium() {
+        setImage(mediumImage);
+    }
+    
     /**
      * Act - do whatever the Medium wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    
-    private static final GreenfootImage medium = new GreenfootImage("ui/button/difficulty/medium_btn.png");
     public void act()
     {
         // Add your action code here.
         if (Greenfoot.mouseClicked(this)) {
-            Greenfoot.setWorld(new CityClass());
+            new Game(2);
+            Greenfoot.setWorld(new CityClass(2));
         }
     }
 }
