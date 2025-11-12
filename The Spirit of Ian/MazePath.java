@@ -11,26 +11,33 @@ public class MazePath extends Game
 {
     private static final GreenfootImage mazeMap = new GreenfootImage("worlds/maze.png");
     private static final GreenfootImage block = new GreenfootImage("ui/bush.png");
+    private static final GreenfootSound treeSound = new GreenfootSound("TreeMaze.mp3");
+    private static final GreenfootSound mazeSound = new GreenfootSound("Maze.mp3");
     
-    private int difficulty;
+    private Dialog fallen = new Dialog(28, 28, true);
+    private Dialog puyeng = new Dialog(29, 29, true);
+    
+    private Teacher teacher;
+    private boolean isMaze;
     
     /**
      * Constructor for objects of class MazePath.
      * 
      */
-    public MazePath(int difficulty)
+    public MazePath(Teacher teacher, boolean isMaze)
     {
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1248, 576);
-        this.difficulty = difficulty;
+        this.teacher = teacher;
+        this.isMaze = isMaze;
         setBackground(mazeMap);
         prepare();
     }
     
     private void prepare()
-    {        
-        //Collider c = new Collider(block);
-        //addObject(c, 64, 32);
+    {
+        Overlay o = new Overlay("fadeOut", 2);
+        addObject(o, 624, 288);
         
         Collider cTop = new Collider(1248, 70, 0, 0);
         addObject(cTop, 624, 35);
@@ -38,11 +45,49 @@ public class MazePath extends Game
         Collider cBot = new Collider(1248, 70, 0, 0);
         addObject(cBot, 624, 541);
         
-        MazeGenerator mazeGen = new MazeGenerator(39, 14, 0, 4, 39, 4, difficulty);
-        displayMaze(mazeGen.getMaze());
+        if (isMaze) {
+            mazeSound.playLoop();
+            
+            MazeGenerator mazeGen = new MazeGenerator(39, 14, 0, 4, 39, 4, teacher.getDifficulty());
+            displayMaze(mazeGen.getMaze());
+            
+            addObject(puyeng, 624, 288);
+        } else {
+            treeSound.playLoop();
+            
+            MazeGenerator mazeGen = new MazeGenerator(39, 14, 0, 4, 39, 4, 1);
+            modifyMaze(mazeGen.getMaze(), teacher.getDifficulty());
+            displayMaze(mazeGen.getMaze());
+            
+            addObject(fallen, 624, 288);
+        }
         
-        Teacher teacher = new Teacher();
+        //Teacher teacher = new Teacher();
         addObject(teacher, 16, 216);
+    }
+    
+    private void modifyMaze(int[][] maze, int difficulty) {
+        double density;
+        switch (difficulty) {
+            case 1: density = 0.05; break; // 5%
+            case 2: density = 0.10; break; // 10%
+            case 3: density = 0.15; break; // 15%
+            default: density = 0.05; break;
+        }
+        
+        int height = maze.length;
+        int width = maze[0].length;
+        
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                // Only modify PATH cells inside the maze
+                if (maze[y][x] == 0) {
+                    if (Greenfoot.getRandomNumber(100) < density * 100) {
+                        maze[y][x] = 2;
+                    }
+                }
+            }
+        }
     }
     
     private void displayMaze(int[][] maze) {
@@ -53,11 +98,24 @@ public class MazePath extends Game
                 if (cell == 1) {
                     Collider c = new Collider(block);
                     addObject(c, x * 32, 96 + y * 32);
+                } else if (cell == 2) {
+                    Log c = new Log(64, Greenfoot.getRandomNumber(4));
+                    addObject(c, x * 32, 96 + y * 32);
                 }
                 x++;
             }
             y++;
         }
+    }
+    
+    @Override
+    public void stopped() {
+        treeSound.stop();
+        mazeSound.stop();
+    }
+    
+    public boolean isMaze() {
+        return isMaze;
     }
 }
 

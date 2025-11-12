@@ -55,8 +55,6 @@ public class Collider extends Actor
     public Collider(GreenfootImage image) {
         transparent = image;
         setImage(transparent);
-        
-        
     }
 
     /**

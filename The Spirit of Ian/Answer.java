@@ -25,7 +25,7 @@ public class Answer extends Board
         this.difficulty = difficulty;
         questionText = generateExpression();
 
-        GreenfootImage img = new GreenfootImage(questionText, 28, Color.WHITE, new Color(0, 0, 0, 0));
+        GreenfootImage img = new GreenfootImage(questionText, 58, Color.WHITE, new Color(0, 0, 0, 0));
         setImage(img);
     }
 
@@ -64,15 +64,14 @@ public class Answer extends Board
                 correctAnswer = a * b;
                 break;
             case "/":
-                while (b == 0 || a % b != 0) {
-                    a = Greenfoot.getRandomNumber(max) + 1;
-                    b = Greenfoot.getRandomNumber(max - 1) + 1;
-                }
-                correctAnswer = a / b;
+                b = Greenfoot.getRandomNumber(max) + 1;
+                int hB = Greenfoot.getRandomNumber(max) + 1;
+                a = b * hB;
+                correctAnswer = hB;
                 break;
         }
 
-        int studentCorrect = Greenfoot.getRandomNumber(1);
+        int studentCorrect = Greenfoot.getRandomNumber(2);
 
         if (studentCorrect == 1) {
             studentAnswer = correctAnswer;

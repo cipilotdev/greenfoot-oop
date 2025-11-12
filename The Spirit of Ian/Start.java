@@ -15,33 +15,34 @@ public class Start extends Button
         setImage(startImage);
     }
     
-    /**
-     * Act - do whatever the Start wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     public void act()
     {
-        // Add your action code here.
+        super.act();
         if (Greenfoot.mouseClicked(this)) {
-            //Greenfoot.setWorld(new MazePath(2));
+            //Greenfoot.setWorld(new VillageClass(new Teacher(1)));
             World w = ((MainMenu)getWorld());
             
-            Overlay o = new Overlay();
+            w.removeObjects((w.getObjects(Button.class)));
+            
+            Overlay o = new Overlay("fadeIn", 3);
             w.addObject(o, 624, 288);
             
             Easy e = new Easy();
             w.addObject(e, 100, 450);
+            e.animateOnce(6, "fadeIn");
             
             Medium m = new Medium();
             w.addObject(m, 300, 450);
+            m.animateOnce(5, "fadeIn");
             
             Hard h = new Hard();
             w.addObject(h, 500, 450);
+            h.animateOnce(4, "fadeIn");
             
             Progressive p = new Progressive();
             w.addObject(p, 700, 450);
-            
-            w.removeObjects((w.getObjects(Button.class)));
+            p.animateOnce(3, "fadeIn");
+            //System.out.println(w.getObjects(Button.class));*/
         }
     }
 }

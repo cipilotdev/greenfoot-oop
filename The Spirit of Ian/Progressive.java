@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Progressive extends Difficulty
+public class Progressive extends Button
 {
     private static final GreenfootImage progressiveImage = new GreenfootImage("ui/button/difficulty/progressive.png");
     
@@ -20,10 +20,10 @@ public class Progressive extends Difficulty
      */
     public void act()
     {
-        // Add your action code here.
+        super.act();
         if (Greenfoot.mouseClicked(this)) {
-            new Game(0);
-            Greenfoot.setWorld(new CityClass(0));
+            stopSound();
+            Greenfoot.setWorld(new CityClass(new Teacher(0)));
         }
     }
 }

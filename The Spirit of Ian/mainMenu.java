@@ -10,36 +10,42 @@ public class MainMenu extends World
 {
 //----- World Background -----
     private static final GreenfootImage mainMenu = new GreenfootImage("worlds/mainMenu.png");
+    private static final GreenfootSound mainMenuSound = new GreenfootSound("Opening.mp3");
     
-    /**
-     * Constructor for objects of class cityClass.
-     * 
-     */
     public MainMenu()
-    {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
+    {
         super(1248, 576, 1);
         setBackground(mainMenu);
         prepare();
     }
     
-    /**
-     * Prepare the world for the start of the program.
-     * That is: create the initial objects and add them to the world.
-     */
     private void prepare()
     {
         Exit exit = new Exit();
         addObject(exit, 346, 457);
+        //exit.animateOnce(7, "slide");
 
         Settings settings = new Settings();
         addObject(settings, 252, 323);
+        //settings.animateOnce(5, "slide");
 
         Start start = new Start();
         addObject(start, 673, 474);
+        start.animateOnce(11, "drop");
+        
+        Overlay a = new Overlay(this);
+        //addObject(a, 0, 0);
     }
     
-    public int getDifficulty() {
-        return 0;
+    @Override
+    public void started() {
+        if (!mainMenuSound.isPlaying()) {
+            mainMenuSound.playLoop();
+        }
+    }
+    
+    @Override
+    public void stopped() {
+        mainMenuSound.stop();
     }
 }

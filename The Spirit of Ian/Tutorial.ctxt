@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=Tutorial
-comment0.text=\n\ Write\ a\ description\ of\ class\ Tutorial\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
-comment1.params=x\ y
-comment1.target=Tutorial(int,\ int)
-comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Tutorial.\n\ \n
-numComments=2

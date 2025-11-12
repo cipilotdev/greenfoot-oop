@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Write a description of class AnimatedSprites here.
@@ -47,6 +48,23 @@ public class AnimatedSprites extends Actor {
     private long current;                            //Time between frames for movement
     private long elapsed;                            //How long a frame was
     
+    private Map<String, GreenfootImage[]> animations2 = new HashMap<>();
+    private String currentState = "standing";
+    private String currentDirection = "south";
+    
+    private int moveX;              //The direction for x movement. (-1, 0 or 1)
+    private int moveY;              //The direction for y movement. (-1, 0 or 1)
+    private int xOffset, yOffset;   //Direction for attacking
+    
+    private int frameIndex = 0;
+    private int frameDelay = 5;
+    private int frameTimer = 0;
+    
+    private boolean isPunching = false;
+    private int punchFrameIndex = 0;
+    private int punchFrameTimer = 0;
+    private int punchFrameDelay = 6; // Delay between punch animation frames
+
     /**
      * AnimatedCharacter Constructor: Creates a new HashMap for all animations and a new array for the layers of the spritesheet and sets the first lastFrame.
      */ 
@@ -373,7 +391,7 @@ public class AnimatedSprites extends Actor {
                 lastFrame = System.nanoTime(); //Reset animation timer to start fresh
                 frame = 0; //0 is the idle frame
                 setImage(currentAnimation.getDirectionalImages()[direction][frame]);
-            } 
+            }
             else 
             {
                 idle = false; 
@@ -458,6 +476,169 @@ public class AnimatedSprites extends Actor {
         {
             currentImages[i] = images[i];
         }
+    }
+    
+    protected void loadAnimations() {
+        // Define the action names and directions that match your folder names
+        String[] states = {"idle", "walking", "running", "punch", "standing"};
+        String[] directions = {"north", "south", "east", "west"};
+
+        for (String state : states) {
+            for (String dir : directions) {
+                String key = state + "_" + dir;
+                
+                // Standing uses single image (not frames)
+                if (state.equals("standing")) {
+                    try {
+                        GreenfootImage singleFrame = new GreenfootImage("Teacher/" + state + "/" + dir + ".png");
+                        animations2.put(key, new GreenfootImage[] { singleFrame });
+                    } catch (Exception e) {
+                        System.err.println("Missing standing image: " + key);
+                    }
+                } else {
+                    // Other actions use frame_000.png, frame_001.png, etc.
+                    GreenfootImage[] frames = loadFrames("Teacher/" + state + "/" + dir + "/");
+                    if (frames != null && frames.length > 0) {
+                        animations2.put(key, frames);
+                    } else {
+                        System.err.println("Missing animation folder: " + key);
+                    }
+                }
+            }
+        }
+    }
+
+    protected GreenfootImage[] loadFrames(String path) {
+        // try up to 10 frames just to be safe
+        int maxFrames = 4;
+        GreenfootImage[] temp = new GreenfootImage[maxFrames];
+        int count = 0;
+
+        for (int i = 0; i < maxFrames; i++) {
+            String fileName = String.format("%sframe_%03d.png", path, i);
+            try {
+                temp[count++] = new GreenfootImage(fileName);
+            } catch (Exception e) {
+                break; // stop if frame not found
+            }
+        }
+
+        GreenfootImage[] result = new GreenfootImage[count];
+        System.arraycopy(temp, 0, result, 0, count);
+        return result;
+    }
+    
+    protected void handleInput() {
+        // RUBAH: Check punching state first (prevent movement during punch)
+        if (isPunching) {
+            stopMoving();
+            return;
+        }
+
+        boolean moving = false;
+        moveX = 0; 
+        moveY = 0;
+        if(Greenfoot.isKeyDown("w")) {
+            currentDirection = "north";
+            currentState = "walking";
+            moving = true;
+            moveY = -1;
+        }
+        if(Greenfoot.isKeyDown("s")) {
+            currentDirection = "south";
+            currentState = "walking";
+            moveY = 1;
+            moving = true;
+        }
+        if(Greenfoot.isKeyDown("d")) {
+            currentDirection = "east";
+            currentState = "walking";
+            moveX = 1;
+            moving = true;
+        }
+        if(Greenfoot.isKeyDown("a")) {
+            currentDirection = "west";
+            currentState = "walking";
+            moveX = -1;
+            moving = true;
+        }
+
+        if (Greenfoot.isKeyDown("space")) {
+            startPunch();
+            return;
+        }
+        
+        if (moveX != 0 || moveY != 0) {
+            //Set directions for attacking. -1, 0 or 1 for each axis to represent which direction the player is facing
+            xOffset = moveX;
+            yOffset = moveY;
+            teacherMoveInDirection(moveX, moveY);
+        } else {
+            stopMoving();
+        }
+        
+        if (!moving && !Greenfoot.isKeyDown("space")) {
+            currentState = "standing";
+        }
+    }
+
+    private void startPunch() {
+        if (isPunching) return;
+        isPunching = true;
+        punchFrameIndex = 0;
+        punchFrameTimer = 0;
+        currentState = "punch";
+    }
+
+    protected void animate() {
+        if (isPunching) {
+            // Handle punch animation separately
+            punchFrameTimer++;
+            if (punchFrameTimer >= punchFrameDelay) {
+                punchFrameTimer = 0;
+                punchFrameIndex++;
+                
+                GreenfootImage[] punchFrames = getCurrentAnimation();
+                if (punchFrames != null && punchFrames.length > 0) {
+                    if (punchFrameIndex >= punchFrames.length) {
+                        // Punch animation finished
+                        isPunching = false;
+                        currentState = "standing";
+                        frameIndex = 0;
+                        // Set standing frame
+                        GreenfootImage[] standingFrames = getCurrentAnimation();
+                        if (standingFrames != null && standingFrames.length > 0) {
+                            setImage(standingFrames[0]);
+                        }
+                    } else {
+                        // Show next punch frame
+                        setImage(punchFrames[punchFrameIndex]);
+                    }
+                }
+            }
+        } else {
+            // Normal animation for walking/idle/etc
+            frameTimer++;
+            if (frameTimer >= frameDelay) {
+                frameTimer = 0;
+                frameIndex++;
+                GreenfootImage[] frames = getCurrentAnimation();
+                if (frames != null && frames.length > 0) {
+                    frameIndex %= frames.length;
+                    setImage(frames[frameIndex]);
+                }
+            }
+        }
+    }
+
+    private GreenfootImage[] getCurrentAnimation() {
+        return animations2.get(currentState + "_" + currentDirection);
+    }
+
+    protected GreenfootImage getCurrentFrame() {
+        GreenfootImage[] frames = getCurrentAnimation();
+        if (frames == null || frames.length == 0) return null;
+        return frames[0];
     }
 }
 

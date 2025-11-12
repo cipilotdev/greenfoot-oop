@@ -4,4 +4,6 @@ comment1.params=generator
 comment1.target=TrueButton(Answer)
 comment2.params=
 comment2.target=void\ act()
-numComments=3
+comment3.params=
+comment3.target=void\ handleClick()
+numComments=4

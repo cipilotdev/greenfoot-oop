@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Medium extends Difficulty
+public class Medium extends Button
 {
     private static final GreenfootImage mediumImage = new GreenfootImage("ui/button/difficulty/medium.png");
     
@@ -20,10 +20,10 @@ public class Medium extends Difficulty
      */
     public void act()
     {
-        // Add your action code here.
+        super.act();
         if (Greenfoot.mouseClicked(this)) {
-            new Game(2);
-            Greenfoot.setWorld(new CityClass(2));
+            stopSound();
+            Greenfoot.setWorld(new CityClass(new Teacher(2)));
         }
     }
 }

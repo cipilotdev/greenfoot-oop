@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Easy extends Difficulty
+public class Easy extends Button
 {
     private static final GreenfootImage easyImage = new GreenfootImage("ui/button/difficulty/easy.png");
     
@@ -14,16 +14,12 @@ public class Easy extends Difficulty
         setImage(easyImage);
     }
     
-    /**
-     * Act - do whatever the Easy wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     public void act()
     {
-        // Add your action code here.
+        super.act();
         if (Greenfoot.mouseClicked(this)) {
-            new Game(1);
-            Greenfoot.setWorld(new CityClass(1));
+            stopSound();
+            Greenfoot.setWorld(new CityClass(new Teacher(1)));
         }
     }
 }

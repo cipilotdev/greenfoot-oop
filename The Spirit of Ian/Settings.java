@@ -21,7 +21,7 @@ public class Settings extends Button
      */
     public void act()
     {
-        // Add your action code here.
+        super.act();
         if (Greenfoot.mouseClicked(this)) {
             Greenfoot.setWorld(null);
         }
