@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=MainMenu
+comment0.text=\n\ Write\ a\ description\ of\ class\ mainMenu\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=
+comment1.target=MainMenu()
+comment2.params=
+comment2.target=void\ prepare()
+comment3.params=
+comment3.target=void\ started()
+comment4.params=
+comment4.target=void\ stopped()
+numComments=5

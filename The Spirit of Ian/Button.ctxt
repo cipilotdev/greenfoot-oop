@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=Button
+comment0.text=\n\ Write\ a\ description\ of\ class\ button\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=speed\ version
+comment1.target=void\ animateOnce(int,\ java.lang.String)
+comment2.params=
+comment2.target=void\ animate()
+comment3.params=
+comment3.target=void\ act()
+comment4.params=
+comment4.target=void\ stopSound()
+numComments=5
