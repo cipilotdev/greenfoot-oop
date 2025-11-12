@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Overlay
+comment0.text=\n\ Write\ a\ description\ of\ class\ Overlay\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=transparency
+comment1.target=Overlay(int)
+comment2.params=
+comment2.target=Overlay()
+comment3.params=animate\ speed
+comment3.target=Overlay(java.lang.String,\ int)
+comment4.params=world
+comment4.target=Overlay(greenfoot.World)
+comment5.params=ekspresi
+comment5.target=Overlay(greenfoot.GreenfootImage)
+comment6.params=
+comment6.target=void\ act()
+comment6.text=\n\ Act\ -\ do\ whatever\ the\ Overlay\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+comment7.params=
+comment7.target=void\ animate()
+numComments=8

@@ -37,19 +37,24 @@ public class Collider extends Actor
         this.xOffset = xOffset;
         this.yOffset = yOffset;
 
-        transparent = new GreenfootImage (xSize, ySize);
+        transparent = new GreenfootImage(xSize, ySize);
         
         //----- Debug image -----
-        debug = new GreenfootImage (xSize, ySize);
-        debug.setColor (Color.RED);
+        debug = new GreenfootImage(xSize, ySize);
+        debug.setColor(Color.RED);
         debug.fill();
-        debug.setTransparency (75);
+        debug.setTransparency(75);
 
         setImage(transparent);
         
         //----- Debug image -----
         //Uncomment the line below
         setImage(debug);
+    }
+    
+    public Collider(GreenfootImage image) {
+        transparent = image;
+        setImage(transparent);
     }
 
     /**

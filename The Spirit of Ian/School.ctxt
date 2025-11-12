@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=School
+comment0.text=\n\ Write\ a\ description\ of\ class\ School\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=teacher
+comment1.target=School(Teacher)
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ School.\n\ \n
+comment2.params=
+comment2.target=void\ prepare()
+comment3.params=
+comment3.target=void\ stopped()
+numComments=4

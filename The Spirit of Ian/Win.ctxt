@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=Win
+comment0.text=\n\ Write\ a\ description\ of\ class\ Win\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=score
+comment1.target=Win(int)
+comment2.params=score
+comment2.target=void\ showScore(int)
+numComments=3

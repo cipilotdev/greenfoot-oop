@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=BoardCollision
+comment0.text=\n\ Write\ a\ description\ of\ class\ BoardCollision\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=xSize\ ySize\ clickRange\ difficulty
+comment1.target=BoardCollision(int,\ int,\ int,\ int)
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=boolean\ isOpen()
+comment4.params=
+comment4.target=void\ addToWorld()
+comment5.params=
+comment5.target=void\ ngajarStart()
+comment6.params=
+comment6.target=void\ ngajarStop()
+numComments=7

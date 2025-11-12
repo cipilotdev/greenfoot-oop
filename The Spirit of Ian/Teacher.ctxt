@@ -1,10 +1,21 @@
 #BlueJ class context
 comment0.target=Teacher
-comment0.text=\n\ Write\ a\ description\ of\ class\ Teacher\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
-comment1.params=
-comment1.target=Teacher()
-comment1.text=\n\ Teacher\ constructor\ -\ \n
+comment1.params=difficulty
+comment1.target=Teacher(int)
 comment2.params=
 comment2.target=void\ act()
-comment2.text=\n\ Act\ -\ do\ whatever\ the\ Teacher\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
-numComments=3
+comment3.params=
+comment3.target=void\ checkCollision()
+comment4.params=
+comment4.target=void\ storePosition()
+comment5.params=
+comment5.target=void\ checkChangeMap()
+comment6.params=
+comment6.target=void\ handlePopUp()
+comment7.params=
+comment7.target=void\ handleTutorial()
+comment8.params=
+comment8.target=int\ getDifficulty()
+comment9.params=f
+comment9.target=void\ setTutorialFinished(boolean)
+numComments=10

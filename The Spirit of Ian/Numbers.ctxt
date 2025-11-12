@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Numbers
+comment0.text=\n\ Write\ a\ description\ of\ class\ Numbers\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=num
+comment1.target=Numbers(java.lang.String)
+comment2.params=num\ clickable
+comment2.target=Numbers(java.lang.String,\ boolean)
+comment3.params=img
+comment3.target=Numbers(greenfoot.GreenfootImage)
+comment4.params=
+comment4.target=void\ act()
+comment4.text=\n\ Act\ -\ do\ whatever\ the\ Numbers\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+numComments=5

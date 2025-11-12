@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=MazePath
+comment0.text=\n\ Write\ a\ description\ of\ class\ MazePath\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=teacher\ isMaze
+comment1.target=MazePath(Teacher,\ boolean)
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ MazePath.\n\ \n
+comment2.params=
+comment2.target=void\ prepare()
+comment3.params=maze\ difficulty
+comment3.target=void\ modifyMaze(int[][],\ int)
+comment4.params=maze
+comment4.target=void\ displayMaze(int[][])
+comment5.params=
+comment5.target=void\ stopped()
+comment6.params=
+comment6.target=boolean\ isMaze()
+numComments=7
