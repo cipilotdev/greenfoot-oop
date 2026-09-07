@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Write a description of class AnimatedSprites here.
@@ -7,14 +8,80 @@ import java.util.HashMap;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class AnimatedSprites extends Actor
-{
+public class AnimatedSprites extends Actor {
+    //----- Protected variables -----
+    protected HashMap<String, Animation> animations; //This HashMap stores the animations
+    
+    protected Animation primaryAnimation;            //The primary animation is generally movement - this is the base animation
+    protected Animation currentAnimation;            //The animation currently playing
+    
+    protected int direction;                         //Direction: 0 = Right, 1 = Left, 2 = Up, 3 = Down
+    
+    protected Collider myCollider;                   //Reference to my collider
+    
+    //----- Protected variables (accessible by subclasses) -----
+    protected double framesPerSecond;                  //Animation speed
+    protected double secondsPerFrame;                  //Calculated fraction of second per frame
+    protected double maxFrameLength = 0.10;            //Used to avoid "jumping" animations if lag
+    
+    protected int frame = 0;                           //Current frame counter
+    protected double xx, yy;                           //Internal, double representation of coordinates
+    protected int dirX = 0;                            //Variable used to control direction
+    protected int dirY = 0;                            //Variable used to control direction
+    protected int prevX, prevY;                        //Previous rounded X and Y values
+    protected boolean idle = false;                    //Used to specify idle frame
+    protected boolean stopAtEnd = false;               //Is this a TERMINAL animation?
+    
+    protected double moveSpeed;                        //How many pixels per SECOND
+    
+    protected static final int maxLayers = 3;          //How many layers can be rendered together to one spriteSheet
+    
+    protected GreenfootImage[] currentImages;          //Current set of images. This is one dimension of an Animation, and will be cycled through in the animation code.
+    protected GreenfootImage[] spriteSheetLayers;      //Array that contains the layers of the spriteSheet
+    protected GreenfootImage spriteSheet;              //The final spriteSheet of the character (with all layers that are currenty visible)
+    
+    protected boolean collisionEnabled = false;
+    protected boolean sheet = false;
+    
+    //Keep animation going at consistent speed
+    private long lastFrame;                          //Update of the last animation
+    private long current;                            //Time between frames for movement
+    private long elapsed;                            //How long a frame was
+    
+    private Map<String, GreenfootImage[]> animations2 = new HashMap<>();
+    private String currentState = "standing";
+    private String currentDirection = "south";
+    
+    private int moveX;              //The direction for x movement. (-1, 0 or 1)
+    private int moveY;              //The direction for y movement. (-1, 0 or 1)
+    private int xOffset, yOffset;   //Direction for attacking
+    
+    private int frameIndex = 0;
+    private int frameDelay = 5;
+    private int frameTimer = 0;
+    
+    private boolean isPunching = false;
+    private int punchFrameIndex = 0;
+    private int punchFrameTimer = 0;
+    private int punchFrameDelay = 6; // Delay between punch animation frames
+
+    /**
+     * AnimatedCharacter Constructor: Creates a new HashMap for all animations and a new array for the layers of the spritesheet and sets the first lastFrame.
+     */ 
+    public AnimatedSprites() {
+        animations = new HashMap<String, Animation>();
+
+        spriteSheetLayers = new GreenfootImage[maxLayers];
+
+        //Set the initial timestamp for animation timer
+        lastFrame = System.nanoTime();
+    }
+    
     /**
      * Act - do whatever the AnimatedSprites wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    public void act()
-    {
+    public void act() {
         // Add your action code here.
         long lastAct = current;
         //Determine how much time has passed since the last act
@@ -25,9 +92,8 @@ public class AnimatedSprites extends Actor
         long deltaTime = (current - lastAct) / 1000000;
 
         //----- Animation -----
-
-        if((dirX == 0 && dirY == 0) && !stopAtEnd) //If not moving, and not playing a terminal animation, switch to idle
-        { 
+        if ((dirX == 0 && dirY == 0) && !stopAtEnd) {
+            //If not moving, and not playing a terminal animation, switch to idle
             idle = true;
             lastFrame = current;
 
@@ -35,21 +101,19 @@ public class AnimatedSprites extends Actor
             frame = 0;
 
             setImage(currentImages[frame]);
-        } 
-        else 
-        {            
-            if(elapsed > secondsPerFrame * 1000 || idle) //Check if ready to show next frame
-            {
+        } else {
+            if (elapsed > secondsPerFrame * 1000 || idle) {
+                //Check if ready to show next frame
                 lastFrame = current;
                 frame++;
 
                 idle = false;
             }
 
-            if(frame > currentImages.length - 1) //If this is the last frame
-            { 
-                if(stopAtEnd) //If this is a terminal animation
-                { 
+            if (frame > currentImages.length - 1) //If this is the last frame
+            {
+                if (stopAtEnd) //If this is a terminal animation
+                {
                     //If a terminal animation is finished, return to primary
                     currentAnimation = primaryAnimation;
                     stopAtEnd = false;
@@ -90,70 +154,57 @@ public class AnimatedSprites extends Actor
             positionCollider();
         }
     }
-    //----- Protected variables -----
-    protected HashMap<String, Animation> animations; //This HashMap stores the animations
+    
+    public void teacherAct() {
+        if(collisionEnabled)
+        {
+            long lastAct = current;
+            //Determine how much time has passed since the last act
+            current = System.nanoTime();
+            //Find elapsed time since last frame switch in milliseconds (ms) for animation
+            elapsed = (long)((current - lastFrame) / 1000000.0); 
+            //Find elapsed time since last act, for movement
+            long deltaTime = (current - lastAct) / 1000000;
+            //Calculate delta time - how many seconds have passed since the last act (I.e. 30 fps, dT = 0.0333)
+            double dT = (current-lastAct) / 1000000000.0;
 
-    protected Animation primaryAnimation;            //The primary animation is generally movement - this is the base animation
-    protected Animation currentAnimation;            //The animation currently playing
+            if(dT > maxFrameLength)
+            {
+                dT = maxFrameLength;
+            }
+            //Calculate exact new location
+            xx += ((double)(dirX) * moveSpeed) * dT;
+            yy += ((double)(dirY) * moveSpeed) * dT;
 
-    protected int direction;                         //Direction: 0 = Right, 1 = Left, 2 = Up, 3 = Down
-
-    protected Collider myCollider;                   //Reference to my collider
-
-    //----- Private variables -----
-    private double framesPerSecond;                  //Animation speed
-    private double secondsPerFrame;                  //Calculated fraction of second per frame
-    private double maxFrameLength = 0.10;            //Used to avoid "jumping" animations if lag
-
-    private int frame = 0;                           //Current frame counter
-    private double xx, yy;                           //Internal, double representation of coordinates
-    private int dirX = 0;                            //Variable used to control direction
-    private int dirY = 0;                            //Variable used to control direction
-    private int prevX, prevY;                        //Previous rounded X and Y values
-    private boolean idle = false;                    //Used to specify idle frame
-    private boolean stopAtEnd = false;               //Is this a TERMINAL animation?
-
-    private double moveSpeed;                        //How many pixels per SECOND
-
-    private static final int maxLayers = 3;          //How many layers can be rendered together to one spriteSheet
-
-    private GreenfootImage[] currentImages;          //Current set of images. This is one dimension of an Animation, and will be cycled through in the animation code.
-    private GreenfootImage[] spriteSheetLayers;      //Array that contains the layers of the spriteSheet
-    private GreenfootImage spriteSheet;              //The final spriteSheet of the character (with all layers that are currenty visible)
-
-    private boolean collisionEnabled = false; 
-
-    //Keep animation going at consistent speed
-    private long lastFrame;                          //Update of the last animation
-    private long current;                            //Time between frames for movement
-    private long elapsed;                            //How long a frame was
-
-    /**
-     * AnimatedCharacter Constructor: Creates a new HashMap for all animations and a new array for the layers of the spritesheet and sets the first lastFrame.
-     */ 
-    public AnimatedSprites()
-    {
-        animations = new HashMap<String, Animation>();
-
-        spriteSheetLayers = new GreenfootImage[maxLayers];
-
-        //Set the initial timestamp for animation timer
-        lastFrame = System.nanoTime();
+            //Update my location
+            super.setLocation((int)Math.round(xx), (int)Math.round(yy));
+            positionCollider();
+        }
     }
     
     /**
-     * Method 'setCurrentImages': Is called in the 'runTerminalAnimation' method, if a terminal animation should be played or in the act method,
-     * if the terminal animation is finished and the current animation will set to the primary animation again.
-     * It updates the currentImages array. This is one dimension of an Animation, and will be cycled through in the animation code.
+     * Method 'addedToWorld': Is called when an animated character is placed in the world.
+     * It sets the internal double variables, the currentAnimation, the first character image (based on the starting direction) and calls the 'positionCollider' method, if collision is enabled.
      * 
-     * @param 'images': The array of GreenfootImages to which the current animation should be set to
+     * @param 'World w': The world in which the hotbar object will be placed in
      */
-    private void setCurrentImages(GreenfootImage[] images)
+    public void addedToWorld(World w)
     {
-        currentImages = new GreenfootImage[images.length];
-        for(int i = 0; i < images.length; i++)
+        //Set the internal double variables 
+        xx = getX();
+        yy = getY();
+        prevX = getX();
+        prevY = getY();
+        
+        if (sheet) {
+            currentAnimation = primaryAnimation;
+            
+            setCurrentImages(currentAnimation.getDirectionalImages()[direction]);
+        }
+        
+        if(collisionEnabled)
         {
-            currentImages[i] = images[i];
+            positionCollider();
         }
     }
     
@@ -170,6 +221,424 @@ public class AnimatedSprites extends Actor
         } 
 
         myCollider.setLocation(getX() + myCollider.getXOffset(), getY() + myCollider.getYOffset());
+    }
+    
+    /**
+     * Method 'setCollider': Is called in every constructor of an animated character subclass that needs a collider.
+     * It creates a new Collider and enables the collision.
+     * 
+     * @param 'width': The width in pixel of the new Collider
+     * @param 'height': The height in pixel of the new Collider
+     * @param 'xOffset': The offset in pixel of the new Collider in x direction 
+     * @param 'yOffset': The offset in pixel of the new Collider in y direction
+     */
+    public void setCollider(int width, int height, int xOffset, int yOffset)
+    {
+        myCollider = new Collider(width, height, xOffset, yOffset);
+        collisionEnabled = true;
+    }
+    
+    /**
+     * Method 'disableCollision': Is called in the 'checkRemove' method in every animated character subclass.
+     * It removes the Collider of the character that is dead and disables the collision.
+     */
+    public void disableCollision() 
+    {
+        if(myCollider != null && myCollider.getWorld() != null)
+        {
+            getWorld().removeObject(myCollider);
+        }
+
+        collisionEnabled = false;
+    }
+    
+    /**
+     * Method 'setLocation': Is called by the 'checkCollision' method in player class.
+     * Overrides the default setLocation method because the backing variables xx and yy need to be updated, 
+     * otherwise they will immediately move the player back every time it tries to move.
+     */
+    @Override
+    public void setLocation(int x, int y)
+    {
+        xx = (int)x;
+        yy = (int)y;   
+        //Once variable have been updated, call the normal method
+        super.setLocation((int)Math.round(xx), (int)Math.round(yy));
+    }
+    
+    /**
+     * Method 'getSpriteSheet': Is called in every constructor of an animated character subclass that needs to set animations.
+     * It returns the current spriteSheet.
+     * 
+     * @return: The current spriteSheet of the character (ALL LAYERS THAT ARE VISIBLE AT THE TIME) 
+     */
+    public GreenfootImage getSpriteSheet() 
+    {
+        return spriteSheet;
+    }
+    
+    /**
+     * Method 'setLayer': Is called in every animated character subclass. 
+     * It sets the layer for the character image in the spriteSheetLayers array and updates the spriteSheet.
+     * 
+     * The 0th layer is on the bottom and will be drawn first. The highest layer is on top and will be drawn last. 
+     * By default there are 12 layers, but you can add more by changing the maxLayers constant.
+     * 
+     * @param 'layer': The layer number you want to place this spritesheet at
+     * @param 'image': The sprite sheet that you want to place at this layer
+     */   
+    public void setLayer(int layer, GreenfootImage image)
+    {
+        spriteSheetLayers[layer] = image;
+        spriteSheet = Animation.updateSpriteSheet(spriteSheetLayers);
+    }
+
+    /**
+     * Method 'refresh': Is called in an animated character subclass, if a layer was changed.
+     * It refreshes the animation using the spritesheet built into this AnimatedCharacter. This should be called after making changes to the SpriteSheet, 
+     * so that the spriteSheet will be changed in the animation. 
+     * 
+     * @param 'animation': The Animation object that will be refreshed. This will use the default spriteSheet, which may have just been changed using 'setLayer', or otherwise.
+     */
+    public void refresh(Animation animation)
+    {
+        animation.refresh(this.spriteSheet);
+        setCurrentImages(currentAnimation.getDirectionalImages()[direction]);
+    }
+
+    /**
+     * Method 'changeSpeed': Sets the movement speed (in pixels per second) and the animation rate (in frames per second)
+     * 
+     * @param 'moveSpeed': The new movement speed (in pixels per second) (0 if the character should not move anymore)
+     * @param 'framesPerSecond': The animation rate (in frames per second)
+     */
+    protected void changeSpeed(int moveSpeed, int framesPerSecond)
+    {
+        //Only run code if something has changed
+        if(this.moveSpeed != moveSpeed || this.framesPerSecond != framesPerSecond)
+        {
+            this.framesPerSecond = framesPerSecond;
+            this.moveSpeed = moveSpeed;
+
+            //Figure out how many seconds per frame
+            secondsPerFrame = 1.0 / this.framesPerSecond;
+            //Reset animation timer
+            lastFrame = System.nanoTime();
+        }
+    }
+
+    /**
+     * Method 'moveInDirection': Is called in the 'move' method in all animated character subclasses, that need to move.
+     * Makes this AnimatedCharacter move in a specified direction.
+     * Subclasses can just set direction once and the animated character will keep moving until stopped or the direction changes.
+     * This method does not actually perform movement. It only sets the direction variables. 
+     * The 'super.act' call in the subclasses will run last in the subclass 'act' method and perform the actual movement.
+     *
+     * Intended to receive a 1 or -1 for for ONE of the parameters, and a zero (0) for the other. This method does NOT allow diagonal movement.
+     * 
+     * @param 'dirX': The direction for x movement. (-1, 0 or 1)
+     * @param 'dirY': The direction for y movement. (-1, 0 or 1)
+     */
+    protected void moveInDirection(int dirX, int dirY)
+    {        
+        if(this.dirX != dirX || this.dirY != dirY) //If there has been a change in direction
+        {
+            if(dirX == 0 && dirY == 0)
+            {
+                idle = true; 
+                lastFrame = System.nanoTime(); //Reset animation timer to start fresh
+                frame = 0; //0 is the idle frame
+                setImage(currentAnimation.getDirectionalImages()[direction][frame]);
+            } 
+            else 
+            {
+                idle = false; 
+
+                //Set the facing direction if direction has changed
+                if(dirX == 1)
+                {
+                    direction = 0;
+                } 
+                else if(dirX == -1)
+                {
+                    direction = 1;
+                }
+                else if(dirY == -1)
+                {
+                    direction = 2;
+                }
+                else if(dirY == 1)
+                {
+                    direction = 3;
+                }                 
+            }
+            
+            setCurrentImages(currentAnimation.getDirectionalImages()[direction]);
+
+            //Set these variables so that they can be checked next frame for changes
+            this.dirX = dirX;
+            this.dirY = dirY;
+        } 
+    }
+    
+    protected void teacherMoveInDirection(int dirX, int dirY)
+    {        
+        if(this.dirX != dirX || this.dirY != dirY) //If there has been a change in direction
+        {
+            if(dirX == 0 && dirY == 0)
+            {
+                idle = true; 
+                lastFrame = System.nanoTime(); //Reset animation timer to start fresh
+                frame = 0; //0 is the idle frame
+                setImage(currentAnimation.getDirectionalImages()[direction][frame]);
+            }
+            else 
+            {
+                idle = false; 
+
+                //Set the facing direction if direction has changed
+                if(dirX == 1)
+                {
+                    direction = 0;
+                } 
+                else if(dirX == -1)
+                {
+                    direction = 1;
+                }
+                else if(dirY == -1)
+                {
+                    direction = 2;
+                }
+                else if(dirY == 1)
+                {
+                    direction = 3;
+                }                 
+            }
+            
+            //Set these variables so that they can be checked next frame for changes
+            this.dirX = dirX;
+            this.dirY = dirY;
+        } 
+    }
+
+    /**
+     * Method 'stopMoving': Is called in an animated character subclass, if the character wants to stop moving.
+     * It sets the direction variables to 0 and resets the animation timer.
+     */
+    public void stopMoving()
+    {
+        dirX = 0;
+        dirY = 0;
+
+        if(!stopAtEnd)
+        {
+            lastFrame = System.nanoTime();
+        }
+    }
+
+    /**
+     * Method 'runTerminalAnimation': Is called in an animated character subclass, if the character should do an animation that will have an end.
+     * It sets the animation variables and 
+     * 
+     * @param 'animationName': The name of the Animation (it must have been added to the animations HashMap already)
+     * @param 'direction': What direction is this animation currently facing?
+     */ 
+    public void runTerminalAnimation(String animationName, int direction)
+    {
+        stopAtEnd = true;
+        idle = false;
+        frame = 0;
+
+        currentAnimation = animations.get(animationName);
+        this.direction = direction;
+
+        if(currentAnimation.isDirectional())
+        {
+            setCurrentImages(currentAnimation.getDirectionalImages()[direction]);
+        } 
+        else 
+        {          
+            setCurrentImages(currentAnimation.getNonDirectionalImages());
+        }
+    }
+
+    /**
+     * Method 'setCurrentImages': Is called in the 'runTerminalAnimation' method, if a terminal animation should be played or in the act method,
+     * if the terminal animation is finished and the current animation will set to the primary animation again.
+     * It updates the currentImages array. This is one dimension of an Animation, and will be cycled through in the animation code.
+     * 
+     * @param 'images': The array of GreenfootImages to which the current animation should be set to
+     */
+    private void setCurrentImages(GreenfootImage[] images)
+    {
+        currentImages = new GreenfootImage[images.length];
+        for(int i = 0; i < images.length; i++)
+        {
+            currentImages[i] = images[i];
+        }
+    }
+    
+    protected void loadAnimations() {
+        // Define the action names and directions that match your folder names
+        String[] states = {"idle", "walking", "running", "punch", "standing"};
+        String[] directions = {"north", "south", "east", "west"};
+
+        for (String state : states) {
+            for (String dir : directions) {
+                String key = state + "_" + dir;
+                
+                // Standing uses single image (not frames)
+                if (state.equals("standing")) {
+                    try {
+                        GreenfootImage singleFrame = new GreenfootImage("Teacher/" + state + "/" + dir + ".png");
+                        animations2.put(key, new GreenfootImage[] { singleFrame });
+                    } catch (Exception e) {
+                        System.err.println("Missing standing image: " + key);
+                    }
+                } else {
+                    // Other actions use frame_000.png, frame_001.png, etc.
+                    GreenfootImage[] frames = loadFrames("Teacher/" + state + "/" + dir + "/");
+                    if (frames != null && frames.length > 0) {
+                        animations2.put(key, frames);
+                    } else {
+                        System.err.println("Missing animation folder: " + key);
+                    }
+                }
+            }
+        }
+    }
+
+    protected GreenfootImage[] loadFrames(String path) {
+        // try up to 10 frames just to be safe
+        int maxFrames = 4;
+        GreenfootImage[] temp = new GreenfootImage[maxFrames];
+        int count = 0;
+
+        for (int i = 0; i < maxFrames; i++) {
+            String fileName = String.format("%sframe_%03d.png", path, i);
+            try {
+                temp[count++] = new GreenfootImage(fileName);
+            } catch (Exception e) {
+                break; // stop if frame not found
+            }
+        }
+
+        GreenfootImage[] result = new GreenfootImage[count];
+        System.arraycopy(temp, 0, result, 0, count);
+        return result;
+    }
+    
+    protected void handleInput() {
+        // RUBAH: Check punching state first (prevent movement during punch)
+        if (isPunching) {
+            stopMoving();
+            return;
+        }
+
+        boolean moving = false;
+        moveX = 0; 
+        moveY = 0;
+        if(Greenfoot.isKeyDown("w")) {
+            currentDirection = "north";
+            currentState = "walking";
+            moving = true;
+            moveY = -1;
+        }
+        if(Greenfoot.isKeyDown("s")) {
+            currentDirection = "south";
+            currentState = "walking";
+            moveY = 1;
+            moving = true;
+        }
+        if(Greenfoot.isKeyDown("d")) {
+            currentDirection = "east";
+            currentState = "walking";
+            moveX = 1;
+            moving = true;
+        }
+        if(Greenfoot.isKeyDown("a")) {
+            currentDirection = "west";
+            currentState = "walking";
+            moveX = -1;
+            moving = true;
+        }
+
+        if (Greenfoot.isKeyDown("space")) {
+            startPunch();
+            return;
+        }
+        
+        if (moveX != 0 || moveY != 0) {
+            //Set directions for attacking. -1, 0 or 1 for each axis to represent which direction the player is facing
+            xOffset = moveX;
+            yOffset = moveY;
+            teacherMoveInDirection(moveX, moveY);
+        } else {
+            stopMoving();
+        }
+        
+        if (!moving && !Greenfoot.isKeyDown("space")) {
+            currentState = "standing";
+        }
+    }
+
+    private void startPunch() {
+        if (isPunching) return;
+        isPunching = true;
+        punchFrameIndex = 0;
+        punchFrameTimer = 0;
+        currentState = "punch";
+    }
+
+    protected void animate() {
+        if (isPunching) {
+            // Handle punch animation separately
+            punchFrameTimer++;
+            if (punchFrameTimer >= punchFrameDelay) {
+                punchFrameTimer = 0;
+                punchFrameIndex++;
+                
+                GreenfootImage[] punchFrames = getCurrentAnimation();
+                if (punchFrames != null && punchFrames.length > 0) {
+                    if (punchFrameIndex >= punchFrames.length) {
+                        // Punch animation finished
+                        isPunching = false;
+                        currentState = "standing";
+                        frameIndex = 0;
+                        // Set standing frame
+                        GreenfootImage[] standingFrames = getCurrentAnimation();
+                        if (standingFrames != null && standingFrames.length > 0) {
+                            setImage(standingFrames[0]);
+                        }
+                    } else {
+                        // Show next punch frame
+                        setImage(punchFrames[punchFrameIndex]);
+                    }
+                }
+            }
+        } else {
+            // Normal animation for walking/idle/etc
+            frameTimer++;
+            if (frameTimer >= frameDelay) {
+                frameTimer = 0;
+                frameIndex++;
+                GreenfootImage[] frames = getCurrentAnimation();
+                if (frames != null && frames.length > 0) {
+                    frameIndex %= frames.length;
+                    setImage(frames[frameIndex]);
+                }
+            }
+        }
+    }
+
+    private GreenfootImage[] getCurrentAnimation() {
+        return animations2.get(currentState + "_" + currentDirection);
+    }
+
+    protected GreenfootImage getCurrentFrame() {
+        GreenfootImage[] frames = getCurrentAnimation();
+        if (frames == null || frames.length == 0) return null;
+        return frames[0];
     }
 }
 
