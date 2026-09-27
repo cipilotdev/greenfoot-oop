@@ -26,15 +26,23 @@ public class Credit extends Button
         new GreenfootImage("worlds/villageClass.png")
     };
     
-    private int counter = 0;
+    //Credit sequence phases
+    private static final int FADE_IN = 0;
+    private static final int HOLD = 1;
+    private static final int FADE_OUT = 2;
+    private static final int ENDING = 3;
+    
+    private static final int fadeTicks = 30;
+    private static final int holdTicks = 90;
+    
+    private int phase = FADE_IN;
+    private int phaseTimer = 0;
     private int frameIndex = 0;
-    private int bgIndex = 0;
-    private int frameTimer = 0;
-    private int bgTimer = 0;
-    private int frameDuration = 92;
-    private int bgDuration = 86;
-
+    
+    private GreenfootImage previousBg;
+    private GreenfootImage nextBg;
     private Overlay overlay;
+    private Overlay blackout;
     private boolean animated = false;
 
     public Credit()
@@ -57,53 +65,92 @@ public class Credit extends Button
                 main.hide();
             }
             
-            animated = true;
+            startSequence();
         }
 
         if (animated) {
             runAnimation();
         }
     }
+    
+    private void startSequence() {
+        animated = true;
+        frameIndex = 0;
+        previousBg = new GreenfootImage(getWorld().getBackground());
+        startFrame();
+    }
+    
+    /**
+     * Prepare the crossfade to the next world background and show the next credit frame (invisible at first).
+     */
+    private void startFrame() {
+        phase = FADE_IN;
+        phaseTimer = 0;
+        nextBg = new GreenfootImage(worlds[frameIndex]);
+        
+        overlay = new Overlay(creditFrames[frameIndex]);
+        overlay.getImage().setTransparency(0);
+        getWorld().addObject(overlay, 624, 288);
+    }
 
     private void runAnimation() {
-        if (frameTimer > frameDuration) {
-            frameTimer = 0;
-            frameIndex++;
-            if (frameIndex > 4) {
-                frameIndex = 0;
-                animated = false;
-                Greenfoot.setWorld(new MainMenu());
-                World w = getWorld();
-                if (w != null && w.getClass() == MainMenu.class) {
-                    MainMenu main = (MainMenu)getWorld();
-                    main.startAnimate();
-                    main.show();
-                }
-            }
-        }
-        
-        if (bgTimer > bgDuration) {
-            bgTimer = 0;
-            bgIndex++;
-            if (bgIndex > 4) {
-                bgIndex = 0;
-            }
-        }
-        
         World w = getWorld();
-        if (w != null && frameTimer == frameDuration) {
-            w.removeObject(overlay);
-            
-            if (frameIndex != 4) {
-                overlay = new Overlay(creditFrames[frameIndex]);
-                w.addObject(overlay, 624, 288);
-            }
+        if (w == null) {
+            return;
         }
-        if (w != null && bgTimer == bgDuration) {
-            w.setBackground(worlds[bgIndex]);
-        }
+        phaseTimer++;
+        int alpha = Math.min(255, phaseTimer * 255 / fadeTicks);
         
-        frameTimer++;
-        bgTimer++;
+        switch (phase) {
+            case FADE_IN:
+                crossfadeBackground(w, alpha);
+                overlay.getImage().setTransparency(alpha);
+                if (phaseTimer >= fadeTicks) {
+                    previousBg = nextBg;
+                    nextPhase(HOLD);
+                }
+                break;
+            case HOLD:
+                if (phaseTimer >= holdTicks) {
+                    nextPhase(FADE_OUT);
+                }
+                break;
+            case FADE_OUT:
+                overlay.getImage().setTransparency(255 - alpha);
+                if (phaseTimer >= fadeTicks) {
+                    w.removeObject(overlay);
+                    frameIndex++;
+                    if (frameIndex < creditFrames.length) {
+                        startFrame();
+                    } else {
+                        blackout = new Overlay("full", 5);
+                        w.addObject(blackout, 624, 288);
+                        nextPhase(ENDING);
+                    }
+                }
+                break;
+            case ENDING:
+                if (blackout.isFinished()) {
+                    animated = false;
+                    Greenfoot.setWorld(new MainMenu(true));
+                }
+                break;
+        }
+    }
+    
+    private void nextPhase(int p) {
+        phase = p;
+        phaseTimer = 0;
+    }
+    
+    /**
+     * Draw the next background over the previous one with the given alpha.
+     */
+    private void crossfadeBackground(World w, int alpha) {
+        GreenfootImage blended = new GreenfootImage(previousBg);
+        nextBg.setTransparency(alpha);
+        blended.drawImage(nextBg, 0, 0);
+        nextBg.setTransparency(255);
+        w.setBackground(blended);
     }
 }

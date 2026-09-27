@@ -20,12 +20,28 @@ public class MainMenu extends World
     private Overlay title = new Overlay(new GreenfootImage("ui/judul.png"), "full", 1);
     
     private boolean complete = true;
+    private Overlay fadeIn;   //Fade from black when returning from the credits
     
     public MainMenu()
+    {
+        this(false);
+    }
+    
+    /**
+     * @param fromCredits true when returning from the credits, the menu then fades in from black
+     */
+    public MainMenu(boolean fromCredits)
     {
         super(1248, 576, 1);
         setBackground(mainMenu);
         prepare();
+        
+        if (fromCredits) {
+            fadeIn = new Overlay("fadeOut", 4);
+            fadeIn.setAnimateOut();
+            fadeIn.getImage().setTransparency(255);
+            addObject(fadeIn, 624, 288);
+        }
     }
     
     private void prepare()
@@ -36,6 +52,11 @@ public class MainMenu extends World
         addObject(a, 624, 288);
         a.getImage().setTransparency(0);
         
+        //Button images are shared (static) and hide() may have made them invisible, e.g. during the credits
+        exit.getImage().setTransparency(255);
+        ctrls.getImage().setTransparency(255);
+        credit.getImage().setTransparency(255);
+        
         addObject(exit, 346, 457);
         
         addObject(ctrls, 250, 350);
@@ -44,6 +65,14 @@ public class MainMenu extends World
         
         addObject(start, 673, 474);
         start.animateOnce(11, "drop");
+    }
+    
+    public void act() {
+        //The fade overlay covers the whole screen and would catch every mouse click, so remove it once done
+        if (fadeIn != null && fadeIn.isFinished()) {
+            removeObject(fadeIn);
+            fadeIn = null;
+        }
     }
     
     @Override
@@ -59,7 +88,7 @@ public class MainMenu extends World
     }
     
     public void stopAnimate() {
-        a.setAnimateOut();
+        a.setPlay(false);
         complete = false;
     }
     
@@ -82,7 +111,8 @@ public class MainMenu extends World
     
     public void startAnimate() {
         setBackground(mainMenu);
-        a.setAnimateOut();
-        complete = false;
+        a.setAnimateBadai();
+        a.setPlay(true);
+        complete = true;
     }
 }

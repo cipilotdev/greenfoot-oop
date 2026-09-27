@@ -25,6 +25,17 @@ public class Game extends World
         super(x, y, 1);
     }
     
+    public Game(int x, int y, boolean bounded) {
+        super(x, y, 1, bounded);
+    }
+    
+    /**
+     * Worlds with a cutscene override this so the teacher stays frozen while it plays.
+     */
+    public boolean isCutscenePlaying() {
+        return false;
+    }
+    
     public int getDifficulty() {
         return difficulty;
     }

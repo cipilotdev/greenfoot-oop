@@ -582,6 +582,22 @@ public class AnimatedSprites extends Actor {
         }
     }
 
+    /**
+     * Method 'freeze': Stops movement and any walking/punch animation, showing the standing frame.
+     * Used while a dialog, board or cutscene is open and when the character enters a new world.
+     */
+    public void freeze() {
+        stopMoving();
+        isPunching = false;
+        currentState = "standing";
+        frameIndex = 0;
+        frameTimer = 0;
+        GreenfootImage standing = getCurrentFrame();
+        if (standing != null) {
+            setImage(standing);
+        }
+    }
+
     private void startPunch() {
         if (isPunching) return;
         isPunching = true;
@@ -633,6 +649,13 @@ public class AnimatedSprites extends Actor {
 
     private GreenfootImage[] getCurrentAnimation() {
         return animations2.get(currentState + "_" + currentDirection);
+    }
+
+    /**
+     * @return the direction the character faces: "north", "south", "east" or "west"
+     */
+    public String getFacing() {
+        return currentDirection;
     }
 
     protected GreenfootImage getCurrentFrame() {
