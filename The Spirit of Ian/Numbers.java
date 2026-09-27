@@ -38,6 +38,14 @@ public class Numbers extends Actor
     }
     
     /**
+     * Enable or disable mouse clicks on this number (used to lock the keypad
+     * while it is hidden, e.g. during multiple-choice questions or class events).
+     */
+    public void setClickable(boolean clickable) {
+        this.clickable = clickable;
+    }
+    
+    /**
      * Act - do whatever the Numbers wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
@@ -45,8 +53,13 @@ public class Numbers extends Actor
     {
         // Add your action code here.
         if (Greenfoot.mouseClicked(this) && clickable) {
-            Question q = this.getWorld().getObjects(Question.class).get(0);
-            q.addAnswer(num);
+            java.util.List<Question> questions = this.getWorld().getObjects(Question.class);
+            for (Question q : questions) {
+                if (q.isShown()) {
+                    q.addAnswer(num);
+                    break;
+                }
+            }
         }
     }
 }

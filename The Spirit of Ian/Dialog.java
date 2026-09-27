@@ -22,7 +22,10 @@ public class Dialog extends Actor {
     private int speed = 10;
     
     private static final double pressCooldown = 300000000.0;   //Cooldown (0,30sec) between pressing a key
-    private double lastPressedKeyTime;
+    private static double lastPressedKeyTime;                   //Shared so a new dialog can't be skipped by the key that closed the previous one
+    private boolean waitRelease = true;                         //Enter must be released once before this dialog accepts it
+    private static final int spawnFadeSpeed = 25;
+    private int fadeInSpeed = speed;
     
     private Overlay continueBtn = new Overlay(arrow);
     private boolean btnSpawned = false;
@@ -38,13 +41,29 @@ public class Dialog extends Actor {
         GreenfootImage d = new GreenfootImage(basePath + counter + ".png");
         setImage(d);
         this.animate = animate;
+        transparency = 255;
+    }
+    
+    /**
+     * Fade the dialog in when it appears instead of popping in.
+     * Full-screen (opaque) dialogs appear at once, otherwise the map would show through during the fade.
+     */
+    @Override
+    protected void addedToWorld(World world) {
+        if (finished || isOpaque(getImage())) {
+            return;
+        }
+        transparency = 0;
+        getImage().setTransparency(0);
+        fadeInSpeed = spawnFadeSpeed;
+        animateIn = true;
     }
     
     public void act() {
         handleInput();
         
         if (finished) {
-            getWorld().removeObject(continueBtn);
+            removeContinueBtn();
             return;
         }
         
@@ -72,10 +91,21 @@ public class Dialog extends Actor {
     }
     
     private void handleInput() {
-        if (Greenfoot.isKeyDown("enter") && counter != maxCounter + 1) {
+        boolean enterDown = Greenfoot.isKeyDown("enter");
+        if (waitRelease) {
+            if (!enterDown) {
+                waitRelease = false;
+            }
+            return;
+        }
+        if (animateIn || animateOut || changeImage) {
+            return;
+        }
+        if (enterDown && counter != maxCounter + 1 && !finished) {
             double t = System.nanoTime();
             if (t - lastPressedKeyTime >= pressCooldown) {
                 lastPressedKeyTime = t;
+                waitRelease = true;
                 if (animate) {
                     animateOut = true;
                 } else {
@@ -93,8 +123,7 @@ public class Dialog extends Actor {
             if (counter < maxCounter) {
                 changeImage = true;
             } else if (counter == maxCounter) {
-                changeImage = true;
-                finished = true;
+                finish();
             }
         }
         getImage().setTransparency(transparency);
@@ -105,12 +134,13 @@ public class Dialog extends Actor {
         setImage(new GreenfootImage(basePath + counter + ".png"));
         getImage().setTransparency(0);
         transparency = 0;
+        fadeInSpeed = speed;
         animateIn = true;
         changeImage = false;
     }
 
     private void fadeIn() {
-        transparency += 10;
+        transparency += fadeInSpeed;
         if (transparency >= 255) {
             transparency = 255;
             animateIn = false;
@@ -121,10 +151,44 @@ public class Dialog extends Actor {
     private void skipToNextImage() {
         counter++;
         if (counter > maxCounter) {
-            finished = true;
+            finish();
             return;
         }
         setImage(new GreenfootImage(basePath + counter + ".png"));
+    }
+    
+    private void finish() {
+        finished = true;
+        //Animated dialogs have already faded out. Non-animated ones keep their last page visible,
+        //so a full-screen scene stays on screen until the next dialog or world replaces it.
+        if (animate) {
+            getImage().setTransparency(0);
+        }
+        removeContinueBtn();
+    }
+    
+    /**
+     * Checks a grid of sample points to see if the image covers the whole screen without transparent parts.
+     */
+    private static boolean isOpaque(GreenfootImage img) {
+        int w = img.getWidth();
+        int h = img.getHeight();
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 8; j++) {
+                int x = (w - 1) * i / 15;
+                int y = (h - 1) * j / 7;
+                if (img.getColorAt(x, y).getAlpha() < 255) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private void removeContinueBtn() {
+        if (continueBtn.getWorld() != null) {
+            continueBtn.getWorld().removeObject(continueBtn);
+        }
     }
     
     private void animateBtn() {

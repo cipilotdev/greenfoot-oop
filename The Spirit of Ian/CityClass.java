@@ -18,6 +18,37 @@ public class CityClass extends World
     private Teacher teacher;
     private Dialog d = new Dialog(1, 9);
     
+    //{centerX, centerY, width, height} of every student desk (chairs can be walked over)
+    private static final int[][] furniture = {
+        {158, 209, 54, 48},
+        {158, 305, 54, 48},
+        {158, 401, 54, 48},
+        {270, 209, 54, 48},
+        {270, 305, 54, 48},
+        {270, 401, 54, 48},
+        {382, 209, 54, 48},
+        {382, 305, 54, 48},
+        {382, 401, 54, 48},
+        {494, 209, 54, 48},
+        {494, 305, 54, 48},
+        {494, 401, 54, 48},
+        {606, 209, 54, 48},
+        {606, 305, 54, 48},
+        {606, 401, 54, 48},
+        {718, 209, 54, 48},
+        {718, 305, 54, 48},
+        {718, 401, 54, 48},
+        {846, 209, 54, 48},
+        {846, 305, 54, 48},
+        {846, 401, 54, 48},
+        {958, 209, 54, 48},
+        {958, 305, 54, 48},
+        {958, 401, 54, 48},
+        {1070, 209, 54, 48},
+        {1070, 305, 54, 48},
+        {1070, 401, 54, 48}
+    };
+    
     /**
      * Constructor for objects of class cityClass.
      * 
@@ -42,8 +73,15 @@ public class CityClass extends World
         Overlay o = new Overlay("fadeOut", 2);
         addObject(o, 624, 288);
         
-        Collider collider = new Collider(1248, 70, 1, 1);
-        addObject(collider, 624, 35);
+        //Walls around the floor (the door on the top right stays open: the teacher leaves through it)
+        addObject(new Collider(1248, 88, 0, 0), 624, 44);
+        addObject(new Collider(95, 576, 0, 0), 47, 288);
+        addObject(new Collider(98, 576, 0, 0), 1199, 288);
+        addObject(new Collider(1248, 94, 0, 0), 624, 529);
+        
+        //Teacher desk and plant
+        addObject(new Collider(58, 64, 0, 0), 601, 125);
+        addObject(new Collider(26, 38, 0, 0), 111, 113);
         
         BoardCollision board1 = new BoardCollision(130, 60, 80, difficulty);
         addObject(board1, 845, 80);
@@ -51,11 +89,10 @@ public class CityClass extends World
         BoardCollision board2 = new BoardCollision(130, 60, 80, difficulty);
         addObject(board2, 335, 80);
         
-        Collider collider4 = new Collider(60, 70, 0, 0);
-        addObject(collider4, 600, 100);
-        
-        Collider collider5 = new Collider(1248, 400, 0, 0);
-        addObject(collider5, 624, 386);
+        //Student desks
+        for (int[] obj : furniture) {
+            addObject(new Collider(obj[2], obj[3], 0, 0), obj[0], obj[1]);
+        }
         
         Student student1 = new Student();
         addObject(student1, 160, 228);

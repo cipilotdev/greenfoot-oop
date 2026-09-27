@@ -15,6 +15,9 @@ public class VillageClass extends World {
     private static final GreenfootSound finalExamSound = new GreenfootSound("Ujian.mp3");
     private static final GreenfootSound finalSound = new GreenfootSound("Final.mp3");
     
+    //Center x of each column of student desks
+    private static final int[] deskColumnsX = {209, 273, 337, 401, 465, 529, 593, 657, 721};
+    
     private Teacher teacher;
     /**
      * Constructor for objects of class VillageClass.
@@ -59,16 +62,28 @@ public class VillageClass extends World {
         Student student7 = new Student();
         addObject(student7, 720, 300);
         
-        Collider collider = new Collider(1248, 200, 0, 0);
-        addObject(collider, 624, 80);
+        //Walls around the floor
+        addObject(new Collider(1248, 198, 0, 0), 624, 99);
+        addObject(new Collider(32, 576, 0, 0), 16, 288);
+        addObject(new Collider(32, 576, 0, 0), 1232, 288);
+        addObject(new Collider(1248, 32, 0, 0), 624, 560);
         
-        Collider collider2 = new Collider(1248, 300, 0, 0);
-        addObject(collider2, 624, 400);
+        //Teacher desk (the chairs can be walked over)
+        addObject(new Collider(71, 32, 0, 0), 664, 240);
+        
+        //Student desks: each column has two desks, each with a chair below it
+        for (int x : deskColumnsX) {
+            addObject(new Collider(26, 26, 0, 0), x, 295);
+            addObject(new Collider(26, 26, 0, 0), x, 358);
+        }
         
         addObject(teacher, 980, 210);
         
         BoardCollision board1 = new BoardCollision(240, 60, 100, difficulty);
         addObject(board1, 488, 170);
+        
+        ClassEvents classEvents = new ClassEvents();
+        addObject(classEvents, 0, 0);
     }
     
     public void kelasStop() {

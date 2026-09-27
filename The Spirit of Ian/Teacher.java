@@ -8,6 +8,11 @@ public class Teacher extends AnimatedSprites {
     private static final int animationSpeed = 20;
     private static final int walkSpeed = 60;
     
+    //Collider only around the feet, so turning into narrow corridors is forgiving
+    public static final int COLLIDER_WIDTH = 18;
+    public static final int COLLIDER_HEIGHT = 14;
+    public static final int COLLIDER_OFFSET_Y = 13;
+    
     private boolean popUpOpen = false;
     
     // Tutorial
@@ -28,6 +33,15 @@ public class Teacher extends AnimatedSprites {
     
     private boolean startFinished = false;
     private boolean radioSpawned = false;
+    
+    // Tutorial stages, advanced once each so sounds and dialogs change exactly one time
+    private static final int STAGE_TUTOR = 0;
+    private static final int STAGE_RADIO = 1;
+    private static final int STAGE_KEPSEK = 2;
+    private static final int STAGE_SILENT = 3;
+    private static final int STAGE_KAGET = 4;
+    private static final int STAGE_DONE = 5;
+    private int tutorialStage = STAGE_TUTOR;
     private boolean kelasSpawned = false;
     private boolean overlayD2 = false;
     private boolean overlayD3 = false;
@@ -37,6 +51,11 @@ public class Teacher extends AnimatedSprites {
     private boolean animateD3 = false;
     private boolean animateUjian = false;
     private boolean isD1Complete = false;
+    private boolean dayTransition = false;   //True while the screen fades to black between days
+    
+    //Spot in front of the village classroom door, where the teacher starts each day
+    private static final int classDoorX = 980;
+    private static final int classDoorY = 210;
     private boolean isD2Complete = false;
     private boolean isD3Complete = false;
     private boolean isExamComplete = false;
@@ -57,7 +76,7 @@ public class Teacher extends AnimatedSprites {
         loadAnimations();
         setImage(getCurrentFrame());
         
-        setCollider(20, 28, 0, 7);
+        setCollider(COLLIDER_WIDTH, COLLIDER_HEIGHT, 0, COLLIDER_OFFSET_Y);
     }    
     
     public void act() {
@@ -69,6 +88,8 @@ public class Teacher extends AnimatedSprites {
         
         if (!popUpOpen) {
             handleInput();
+        } else {
+            freeze();
         }
         
         animate();
@@ -112,10 +133,12 @@ public class Teacher extends AnimatedSprites {
         }
         if (world.getClass() == MazePath.class) {
             if (getX() > 1232) {
-                world.stopped();
-                if (!((MazePath)getWorld()).isMaze()) {
+                MazePath maze = (MazePath)getWorld();
+                if (!maze.isMaze()) {
+                    world.stopped();
                     Greenfoot.setWorld(new MazePath(this, true));
-                } else {
+                } else if (maze.atRightEnd()) {
+                    world.stopped();
                     Greenfoot.setWorld(new School(this));
                 }
             }
@@ -130,35 +153,31 @@ public class Teacher extends AnimatedSprites {
     
     private void handlePopUp() {
         World world = this.getWorld();
-        boolean isOpen = true;
-        if (world.getClass() == CityClass.class || world.getClass() == VillageClass.class) {
-            List<Dialog> dialogs = world.getObjects(Dialog.class);
-            List<BoardCollision> boardCollisions = world.getObjects(BoardCollision.class);
-            
-            if (dialogs != null && !dialogs.isEmpty()) {
-                for (Dialog dialog : dialogs) {
-                    isOpen = dialog.isOpen();
-                }
-            } else if (boardCollisions != null && !boardCollisions.isEmpty()) {
-                for (BoardCollision boardC : boardCollisions) {
-                    isOpen = boardC.isOpen();
-                }
+        boolean isOpen = false;
+        
+        for (Dialog dialog : world.getObjects(Dialog.class)) {
+            if (dialog.isOpen()) {
+                isOpen = true;
             }
-        } else {
-            List<Dialog> dialogList = world.getObjects(Dialog.class);
-            if (dialogList != null && !dialogList.isEmpty()) {
-                Dialog dialog = dialogList.get(0);
-                if (dialog != null) {
-                    isOpen = dialog.isOpen();
-                }
+        }
+        for (BoardCollision boardC : world.getObjects(BoardCollision.class)) {
+            if (boardC.isOpen()) {
+                isOpen = true;
             }
+        }
+        for (BonusQuestion bonus : world.getObjects(BonusQuestion.class)) {
+            if (bonus.isOpen()) {
+                isOpen = true;
+            }
+        }
+        if (world instanceof Game && ((Game)world).isCutscenePlaying()) {
+            isOpen = true;
+        }
+        if (dayTransition) {
+            isOpen = true;
         }
         
-        if (Greenfoot.isKeyDown("f") || isOpen) {
-            popUpOpen = true;
-        } else if (!isOpen) {
-            popUpOpen = false;
-        }
+        popUpOpen = Greenfoot.isKeyDown("f") || isOpen;
     }
     
     private void handleTutorial() {
@@ -167,37 +186,54 @@ public class Teacher extends AnimatedSprites {
             return;
         }
         CityClass currentWorld = (CityClass)getWorld();
-        if (!currentWorld.isDialogOpen()) {
-            currentWorld.addObject(tutor, 624, 288);            
-        }
         
-        if (startFinished && !radioSpawned) {
-            currentWorld.addObject(radio, 624, 288);
-            currentWorld.prologueStop();
-            currentWorld.radioStart();
-            startFinished = true;
-            radioSpawned = true;
-        }
-        
-        if (!radio.isOpen()) {
-            currentWorld.addObject(kepsek, 624, 288);
-            currentWorld.radioStop();
-            currentWorld.kepsekStart();
-        }
-        
-        if (!kepsek.isOpen()) {
-            currentWorld.addObject(silent, 624, 288);
-            currentWorld.kepsekStop();
-        }
-        
-        if (!silent.isOpen()) {
-            currentWorld.addObject(kaget, 624, 288);
-            currentWorld.kagetStart();
-        }
-        
-        if (!kaget.isOpen()) {
-            currentWorld.stopped();
-            setLocation(1046, 99);
+        switch (tutorialStage) {
+            case STAGE_TUTOR:
+                if (!currentWorld.isDialogOpen()) {
+                    currentWorld.addObject(tutor, 624, 288);
+                }
+                if (startFinished && !radioSpawned) {
+                    currentWorld.addObject(radio, 624, 288);
+                    currentWorld.prologueStop();
+                    currentWorld.radioStart();
+                    radioSpawned = true;
+                    tutorialStage = STAGE_RADIO;
+                }
+                break;
+            case STAGE_RADIO:
+                if (!radio.isOpen()) {
+                    currentWorld.removeObject(radio);
+                    currentWorld.radioStop();
+                    currentWorld.kepsekStart();
+                    currentWorld.addObject(kepsek, 624, 288);
+                    tutorialStage = STAGE_KEPSEK;
+                }
+                break;
+            case STAGE_KEPSEK:
+                if (!kepsek.isOpen()) {
+                    currentWorld.removeObject(kepsek);
+                    currentWorld.kepsekStop();
+                    currentWorld.addObject(silent, 624, 288);
+                    tutorialStage = STAGE_SILENT;
+                }
+                break;
+            case STAGE_SILENT:
+                if (!silent.isOpen()) {
+                    currentWorld.removeObject(silent);
+                    currentWorld.kagetStart();
+                    currentWorld.addObject(kaget, 624, 288);
+                    tutorialStage = STAGE_KAGET;
+                }
+                break;
+            case STAGE_KAGET:
+                if (!kaget.isOpen()) {
+                    currentWorld.stopped();
+                    setLocation(1046, 99);
+                    tutorialStage = STAGE_DONE;
+                }
+                break;
+            default:
+                break;
         }
     }
     
@@ -228,9 +264,11 @@ public class Teacher extends AnimatedSprites {
             animationOverlay.setAnimateFull();
             animationOverlay.setPlay(true);
             animateD1 = true;
+            dayTransition = true;
         }
         
-        if (animateD1 && !kelasD2Spawned) {
+        if (animateD1 && !kelasD2Spawned && animationOverlay.isFinished()) {
+            returnToClassDoor();
             animationOverlay.setAnimateOut();
             currentWorld.addObject(kelasD2, 624, 288);
             kelasD2Spawned = true;
@@ -251,9 +289,11 @@ public class Teacher extends AnimatedSprites {
             currentWorld.removeObject(endKelasD2);
             animationOverlay.setAnimateFull();
             animateD2 = true;
+            dayTransition = true;
         }
         
-        if (animateD2 && !overlayD2) {
+        if (animateD2 && !overlayD2 && animationOverlay.isFinished()) {
+            returnToClassDoor();
             animationOverlay.setAnimateOut();
             currentWorld.addObject(kelasD3, 624, 288);
             overlayD2 = true;
@@ -274,9 +314,11 @@ public class Teacher extends AnimatedSprites {
             currentWorld.removeObject(endKelasD3);
             animationOverlay.setAnimateFull();
             animateD3 = true;
+            dayTransition = true;
         }
         
         if (animateD3 && !overlayD3 && animationOverlay.isFinished()) {
+            returnToClassDoor();
             animationOverlay.setAnimateOut();
             currentWorld.addObject(ujian, 624, 288);
             overlayD3 = true;
@@ -300,6 +342,16 @@ public class Teacher extends AnimatedSprites {
         if (animateUjian && animationOverlay.isFinished()) {
             Greenfoot.setWorld(new Win(score));
         }
+    }
+    
+    /**
+     * Puts the teacher back in front of the classroom door for the next day (called while the screen is black).
+     */
+    private void returnToClassDoor() {
+        setLocation(classDoorX, classDoorY);
+        storePosition();
+        freeze();
+        dayTransition = false;
     }
     
     public int getDifficulty() {
